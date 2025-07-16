@@ -1,0 +1,3121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vietjet Air - Đặt Vé Máy Bay Giá Rẻ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Thiết lập font cho toàn bộ body */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        /* Tùy chỉnh thanh cuộn */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        /* Keyframes cho hiệu ứng quay */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        /* Áp dụng hiệu ứng quay chậm */
+        .animate-spin-slow {
+            animation: spin 1s linear infinite;
+        }
+        /* Keyframes cho hiệu ứng mờ dần vào */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        /* Keyframes cho hiệu ứng phóng to vào */
+        @keyframes scaleIn {
+            from { transform: scale(0.95); }
+            to { transform: scale(1); }
+        }
+        /* Lớp cho modal khi xuất hiện */
+        .modal-enter {
+            animation: fadeIn 0.3s ease-out forwards, scaleIn 0.3s ease-out forwards;
+        }
+        /* Lớp cho modal khi biến mất */
+        .modal-exit {
+            animation: fadeOut 0.3s ease-in forwards, scaleOut 0.3s ease-in forwards;
+        }
+        /* Keyframes cho hiệu ứng mờ dần đi */
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        /* Keyframes cho hiệu ứng thu nhỏ đi */
+        @keyframes scaleOut {
+            from { transform: scale(1); }
+            to { transform: scale(0.95); }
+        }
+        /* Ẩn biểu tượng lịch trong input date */
+        input[list]::-webkit-calendar-picker-indicator {
+            display: none !important;
+        }
+        /* Kiểu dáng ghế ngồi */
+        .seat {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        /* Ghế trống */
+        .seat.available {
+            background-color: #e0f2fe;
+            color: #2196f3;
+            border: 1px solid #90caf9;
+        }
+        /* Ghế đã được đặt */
+        .seat.occupied {
+            background-color: #ef9a9a;
+            color: #d32f2f;
+            cursor: not-allowed;
+            opacity: 0.7;
+            border: 1px solid #ef5350;
+        }
+        /* Ghế đang chọn */
+        .seat.selected {
+            background-color: #4caf50;
+            color: white;
+            border: 1px solid #2e7d32;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        /* Hiệu ứng hover cho ghế trống */
+        .seat.available:hover {
+            background-color: #bbdefb;
+            transform: scale(1.05);
+        }
+        /* Lớp cho chuyến bay được chọn */
+        .flight-card.selected-flight {
+            border: 2px solid #2196f3;
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+        /* Hiệu ứng hover cho thẻ khuyến mại */
+        .promotion-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .promotion-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        /* Keyframes cho hiệu ứng nổi */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            10% { transform: translateY(0px); }
+        }
+        /* Container cho icon nổi */
+        .floating-icon-container {
+            position: fixed;
+            bottom: 40px;
+            right: 20px;
+            z-index: 100;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.0.5);
+            cursor: pointer;
+            animation: float 3s ease-in-out infinite;
+        }
+        .floating-icon-container img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        /* Huy hiệu số tin nhắn chưa đọc */
+        .unread-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #ef4444; /* Red-500 */
+            color: white;
+            border-radius: 9999px; /* Full rounded */
+            padding: 0.25rem 0.5rem; /* px-2 py-1 */
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 700; /* font-bold */
+            min-width: 1.5rem; /* w-6 */
+            height: 1.5rem; /* h-6 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translate(25%, -25%); /* Adjust position */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        /* Ảnh nền cho phần hero */
+        #hero_background {
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+            inset: 0;
+            width: 0%;
+            height: 0%;
+            z-index: -1; /* Đảm bảo nó nằm sau nội dung */
+        }
+        /* Ảnh nền cho phần điểm đến nổi bật */
+        #popular_destinations_background {
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+            inset: 0;
+            width: 0%;
+            height: 0%;
+            z-index: -1;
+        }
+        /* Form tìm kiếm chuyến bay */
+        #flight_search_form {
+            position: relative; /* Đảm bảo z-index hoạt động */
+            overflow: hidden;
+            padding-top: 6rem; /* Tăng padding */
+            padding-bottom: 6rem; /* Tăng padding */
+        }
+        #flight_search_form > div {
+            position: relative;
+            z-index: 10; /* Đảm bảo nội dung nằm trên ảnh nền */
+            background-color: rgba(255, 255, 255, 0.01); /* Lớp phủ trong suốt */
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+        /* Phần điểm đến nổi bật */
+        #popular_destinations_section {
+            position: relative;
+            overflow: hidden;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+        }
+        #popular_destinations_section > div {
+            position: relative;
+            z-index: 10;
+        }
+        /* Đảm bảo các card điểm đến cũng có độ trong suốt */
+        #popular_destinations_list .bg-white {
+            background-color: rgba(255, 255, 255, 0.01);
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm py-4 px-6 md:px-10 sticky top-0 z-50">
+        <nav class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="https://placehold.co/120x40/FF0000/FFFFFF?text=Vietjet" alt="Vietjet Logo" class="h-10 rounded-md shadow-md">
+                <span class="ml-4 text-2xl font-bold text-red-500">Vietjet Air</span>
+            </div>
+            <ul class="hidden md:flex space-x-8 text-lg font-medium">
+                <li><a href="#" class="text-gray-700 hover:text-red-500 transition duration-300">Trang chủ</a></li>
+                <li><a href="https://www.vietjetair.com/vi?utm_source=google-vj-vi&utm_medium=cpc&utm_campaign=ada_awoq12025_kw_rsa_0125awo_brand_name_awoq42024_cpa" class="text-gray-700 hover:text-red-500 transition duration-300" target="_blank">Trang chính</a></li>
+                <li><a href="#" id="history_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300">Lịch sử</a></li>
+                <li><a href="#" id="promotions_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300">Khuyến mại</a></li>
+                <li><a href="#why_choose_us" class="text-gray-700 hover:text-red-500 transition duration-300">Dịch vụ</a></li>
+                <li><a href="#" id="contact_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300">Liên hệ</a></li>
+                <li id="profile_nav_item" class="hidden"><a href="#" id="profile_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300">Hồ sơ</a></li>
+                <li id="admin_settings_nav_item" class="hidden"><a href="#" id="admin_settings_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300">Cài đặt Quản trị</a></li>
+            </ul>
+            <div class="hidden md:block">
+                <button id="login_status_btn" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-full shadow-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                    Đăng nhập
+                </button>
+            </div>
+            <button class="md:hidden text-gray-700 focus:outline-none">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Flight Search Section (Hero) -->
+    <section id="flight_search_form" class="relative text-red-500 py-24 md:py-48 overflow-hidden">
+        <div id="hero_background" style="background-image: url('https://placehold.co/1920x1080/000000/FFFFFF?text=Flight+Background');"></div>
+        <div class="container mx-auto px-6 md:px-10 relative z-10 text-center">
+            <h1 id="hero_headline" class="text-4xl md:text-6xl font-extrabold leading-tight mb-6 drop-shadow-lg">
+                Khám phá thế giới cùng Vietjet Air
+            </h1>
+            <p id="hero_subheadline" class="text-xl md:text-2xl mb-10 opacity-90">
+                Đặt vé máy bay giá rẻ, trải nghiệm bay đẳng cấp!
+            </p>
+
+            <div class="bg-white bg-opacity-75 p-6 md:p-10 rounded-2xl shadow-2xl max-w-4xl mx-auto transform -translate-y-4">
+                <form class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="col-span-full mb-4 flex justify-center space-x-6">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="flight_type" value="one_way" class="form-radio h-5 w-5 text-red-600" checked>
+                            <span class="ml-2 text-gray-800 font-medium">Một chiều</span>
+                        </label>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="flight_type" value="round_trip" class="form-radio h-5 w-5 text-red-600">
+                            <span class="ml-2 text-gray-800 font-medium">Khứ hồi</span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label for="departure" class="block text-gray-700 text-sm font-semibold mb-2 text-left">Điểm đi</label>
+                        <input type="text" id="departure" list="airport_list" placeholder="Chọn điểm đi" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-400 focus:border-transparent transition duration-200 text-gray-900">
+                        <datalist id="airport_list">
+                        </datalist>
+                    </div>
+                    <div>
+                        <label for="destination" class="block text-gray-700 text-sm font-semibold mb-2 text-left">Điểm đến</label>
+                        <input type="text" id="destination" list="airport_list_destination" placeholder="Chọn điểm đến" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-400 focus:border-transparent transition duration-200 text-gray-900">
+                        <datalist id="airport_list_destination">
+                        </datalist>
+                    </div>
+                    <div>
+                        <label for="depart_date" class="block text-gray-700 text-sm font-semibold mb-2 text-left">Ngày đi</label>
+                        <input type="date" id="depart_date" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-400 focus:border-transparent transition duration-200 text-gray-900">
+                    </div>
+                    <div id="return_date_field">
+                        <label for="return_date" class="block text-gray-700 text-sm font-semibold mb-2 text-left">Ngày về</label>
+                        <input type="date" id="return_date" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-400 focus:border-transparent transition duration-200 text-gray-900">
+                    </div>
+                    <div class="col-span-full md:col-span-2 lg:col-span-2">
+                        <label for="passengers" class="block text-gray-700 text-sm font-semibold mb-2 text-left">Số hành khách</label>
+                        <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                            <input type="text" id="passengers" value="1 Hành khách" class="flex-grow text-center p-3 focus:outline-none appearance-none cursor-pointer text-gray-900" readonly>
+                            <button type="button" id="open_passenger_modal_btn" class="p-3 bg-red-500 hover:bg-red-600 text-white font-bold text-xl rounded-r-lg transition duration-200 active:bg-red-700">+</button>
+                        </div>
+                    </div>
+                    <div class="col-span-full md:col-span-2 lg:col-span-2 flex items-end">
+                        <button type="submit" id="search_flight_btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 active:scale-95 relative flex items-center justify-center">
+                            <span id="search_button_text">Tìm chuyến bay</span>
+                            <svg id="search_spinner" class="animate-spin-slow h-5 w-5 text-white ml-3 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Destinations Section -->
+    <section id="popular_destinations_section" class="py-16 relative">
+        <div id="popular_destinations_background" style="background-image: url('https://placehold.co/1920x1080/E0F2F7/000000?text=Popular+Destinations');"></div>
+        <div class="container mx-auto px-6 md:px-10 relative z-10">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">Điểm đến nổi bật & Ưu đãi hấp dẫn</h2>
+            <div id="popular_destinations_list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section id="why_choose_us" class="py-16 bg-white">
+        <div class="container mx-auto px-6 md:px-10 text-center">
+            <h2 class="text-4xl font-bold mb-12 text-gray-800">Tại sao chọn Vietjet Air?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 rounded-xl shadow-lg bg-red-50 hover:shadow-xl transition duration-300 transform hover:scale-105">
+                    <div class="text-red-600 mb-4">
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.007 12.007 0 002.944 12c0 2.893 1.146 5.51 3.04 7.418A12.007 12.007 0 0012 21.056c2.893 0 5.51-1.146 7.418-3.04A12.007 12.007 0 0021.056 12a11.955 11.955 0 01-3.04-8.618z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-900">Giá vé tốt nhất</h3>
+                    <p class="text-gray-600">Luôn mang đến những ưu đãi và giá vé cạnh tranh nhất thị trường.</p>
+                </div>
+                <div class="p-8 rounded-xl shadow-lg bg-red-50 hover:shadow-xl transition duration-300 transform hover:scale-105">
+                    <div class="text-red-600 mb-4">
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-900">Bay đúng giờ</h3>
+                    <p class="text-gray-600">Đảm bảo lịch trình bay đúng giờ, giúp bạn tiết kiệm thời gian.</p>
+                </div>
+                <div class="p-8 rounded-xl shadow-lg bg-red-50 hover:shadow-xl transition duration-300 transform hover:scale-105">
+                    <div class="text-red-600 mb-4">
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM12 14v4m-2-4h4"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-900">Dịch vụ thân thiện</h3>
+                    <p class="text-gray-600">Đội ngũ nhân viên chuyên nghiệp, tận tâm hỗ trợ bạn mọi lúc.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-6 md:px-10 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h4 class="text-xl font-bold mb-4">Vietjet Air</h4>
+                <p class="text-gray-400">Hãng hàng không thế hệ mới, mang đến cơ hội bay cho mọi người.</p>
+            </div>
+            <div>
+                <h4 class="text-xl font-bold mb-4">Hỗ trợ</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Câu hỏi thường gặp</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Điều khoản & Điều kiện</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Chính sách bảo mật</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xl font-bold mb-4">Liên hệ</h4>
+                <p class="text-gray-400">Tổng đài: 1900 1886</p>
+                <p class="text-gray-400">Email: contact@vietjetair.com</p>
+                <p class="text-gray-400">Địa chỉ: Tầng 8, Tòa nhà CTCP Hàng không Vietjet</p>
+            </div>
+            <div>
+                <h4 class="text-xl font-bold mb-4">Theo dõi chúng tôi</h4>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path></svg>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.49 2.503c-2.71 0-3.056.012-4.123.06-1.064.049-1.791.217-2.427.465-.636.248-1.171.599-1.695 1.123-.524.524-.875 1.059-1.123 1.695-.248.636-.416 1.363-.465 2.427-.048 1.067-.06 1.413-.06 4.123s.012 3.056.06 4.123c.049 1.064.217 1.791.465 2.427.248.636.599 1.171 1.123 1.695-.524.524-.875 1.059-1.123 1.695-.248-.636-.416-1.363-.465-2.427-.048-1.067-.06-1.413-.06-4.123s-.012-3.056-.06-4.123c-.049-1.064-.217-1.791-.465-2.427-.248-.636-.599-1.171-1.123-1.695-.524-.524-1.059-.875-1.695-1.123-.636-.248-1.363-.416-2.427-.465-1.067-.048-1.413-.06-4.123-.06zm0 1.67c2.658 0 2.98.01 4.025.058 1.01.046 1.559.217 1.954.372.394.155.674.336.953.615.279.279.46.559.615.953.155.395.326.944.372 1.954.048 1.045.058 1.367.058 4.025s-.01 2.98-.058 4.025c-.046 1.01-.217 1.559-.372 1.954-.155.394-.336.674-.615.953-.279.279-.559.46-.953.615-.395.155-.944.326-1.954.372-1.045.048-1.367.058-4.025.058s-2.98-.01-4.025-.058c-1.01-.046-1.559-.217-1.954-.372-.394-.155-.674-.336-.953-.615-.279-.279-.559-.46-.953-.615-.395-.155-.944-.326-1.954-.372-1.045-.048-1.367-.058-4.123-.058zM17.618 5.767a1.22 1.22 0 110 2.44 1.22 1.22 0 010-2.44z" clip-rule="evenodd"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8 text-center text-gray-500 text-sm">
+            &copy; 2024 Vietjet Air. Tất cả quyền được bảo lưu.
+        </div>
+    </footer>
+
+    <!-- Passenger Selection Modal -->
+    <div id="passenger_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[9999] p-4 hidden opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center transform scale-95">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Chọn số lượng hành khách</h3>
+
+            <div class="space-y-6">
+                <div class="flex justify-between items-center">
+                    <span class="text-lg font-medium text-gray-700">Người lớn (>12 tuổi)</span>
+                    <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                        <button type="button" class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-lg rounded-l-lg transition duration-200 active:bg-gray-300" data-type="adult" data-action="decrease">-</button>
+                        <input type="number" id="adult_count" value="1" min="1" class="w-16 text-center p-2 focus:outline-none appearance-none" readonly>
+                        <button type="button" class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-lg rounded-r-lg transition duration-200 active:bg-gray-300" data-type="adult" data-action="increase">+</button>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-lg font-medium text-gray-700">Trẻ em (2-12 tuổi)</span>
+                    <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                        <button type="button" class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-lg rounded-l-lg transition duration-200 active:bg-gray-300" data-type="child" data-action="decrease">-</button>
+                        <input type="number" id="child_count" value="0" min="0" class="w-16 text-center p-2 focus:outline-none appearance-none" readonly>
+                        <button type="button" class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-lg rounded-r-lg transition duration-200 active:bg-gray-300" data-type="child" data-action="increase">+</button>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-lg font-medium text-gray-700">Trẻ sơ sinh (<2 tuổi)</span>
+                    <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                        <button type="button" class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-lg rounded-l-lg transition duration-200 active:bg-gray-300" data-type="infant" data-action="decrease">-</button>
+                        <input type="number" id="infant_count" value="0" min="0" class="w-16 text-center p-2 focus:outline-none appearance-none" readonly>
+                        <button type="button" class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-lg rounded-r-lg transition duration-200 active:bg-gray-300" data-type="infant" data-action="increase">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <button id="confirm_passenger_btn" class="mt-8 w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                Xác nhận
+            </button>
+        </div>
+    </div>
+
+    <div id="flight_results_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[9998] p-4 hidden opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-2xl w-full text-left transform scale-95 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Kết quả tìm kiếm chuyến bay</h3>
+
+            <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h4 class="text-lg font-semibold text-blue-800 mb-2">Thông tin tìm kiếm:</h4>
+                <p id="search_summary" class="text-gray-700 text-sm"></p>
+            </div>
+
+            <div id="one_way_flight_list" class="space-y-4">
+            </div>
+
+            <div id="round_trip_flights_section" class="hidden">
+                <h4 class="text-xl font-bold text-gray-800 mb-4 mt-8">Chuyến đi</h4>
+                <div id="outbound_flights_list" class="space-y-4">
+                </div>
+
+                <h4 class="text-xl font-bold text-gray-800 mb-4 mt-8">Chuyến về</h4>
+                <div id="return_flights_list" class="space-y-4">
+                </div>
+
+                <p class="text-center text-gray-600 mt-4" id="round_trip_selection_message">Vui lòng chọn chuyến đi và chuyến về.</p>
+                <button id="confirm_round_trip_selection_btn" class="mt-8 w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 active:scale-95 hidden">
+                    Tiếp tục chọn ghế
+                </button>
+            </div>
+
+            <p class="text-center text-gray-600 mt-4" id="no_flights_message">Đang tìm kiếm chuyến bay...</p>
+
+            <button id="close_results_modal_btn" class="mt-8 w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <div id="payment_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[10000] p-4 hidden opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center transform scale-95 max-h-[80vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Thanh toán vé máy bay</h3>
+
+            <div class="space-y-4 mb-6">
+                <p class="text-lg font-semibold text-gray-700">Chuyến bay đã chọn: <span id="selected_flight_info" class="font-bold text-red-600"></span></p>
+                <div class="flex justify-center items-baseline space-x-2">
+                    <p class="text-xl text-gray-500 line-through hidden" id="original_price_display">Giá gốc: <span id="original_price_value"></span></p>
+                    <p class="text-2xl font-bold text-red-600" id="final_price_display">Giá: <span id="final_price_value"></span></p>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label for="voucher_code" class="block text-gray-700 text-sm font-semibold mb-2 text-left">Mã giảm giá (nếu có)</label>
+                <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                    <input type="text" id="voucher_code" placeholder="Nhập mã giảm giá" class="flex-grow p-3 focus:outline-none text-gray-900">
+                    <button type="button" id="apply_voucher_btn" class="p-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold transition duration-200 active:bg-blue-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M12 5a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4zM12 17a2 2 0 100 4 2 2 0 000-4zM12 12a2 2 0 100 4 2 2 0 000-4z"></path></svg>
+                    </button>
+                </div>
+                <p id="voucher_message" class="text-sm mt-2 text-red-500 hidden"></p>
+            </div>
+
+            <button id="proceed_to_payment_btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 active:scale-95">
+                Thanh toán
+            </button>
+
+            <div id="qr_payment_details" class="mt-8 p-6 bg-gray-100 rounded-lg hidden">
+                <h4 class="text-xl font-bold text-gray-800 mb-4">Thông tin chuyển khoản</h4>
+                <img id="qr_code_img" src="https://placehold.co/200x200/000000/FFFFFF?text=QR+Code" alt="Mã QR" class="mx-auto my-4 rounded-lg shadow-md">
+                <p class="text-gray-700 mb-2"><strong>Ngân hàng:</strong> <span id="bank_name"></span></p>
+                <p class="text-gray-700 mb-2"><strong>Chủ tài khoản:</strong> <span id="account_holder"></span></p>
+                <p class="text-gray-700 mb-2"><strong>Số tài khoản:</strong> <span id="account_number"></span></p>
+                <p class="text-gray-700 mb-2"><strong>Số tiền cần thanh toán:</strong> <span id="payment_amount_display" class="font-bold text-red-600"></span></p>
+                <p class="text-gray-700 mb-2"><strong>Nội dung chuyển khoản:</strong> <span id="transfer_content" class="font-semibold text-red-600"></span></p>
+                <p class="text-sm text-red-600 font-medium mt-4">Lưu ý: Vui lòng chụp lại ảnh giao dịch hoặc biến động số dư để giảm thời gian xử lý.</p>
+                <button id="confirm_payment_btn" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                    Xác nhận đã thanh toán
+                </button>
+            </div>
+
+            <button id="close_payment_modal_btn" class="mt-8 w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <div id="upload_proof_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[10001] p-4 hidden opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center transform scale-95">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Tải ảnh xác nhận thanh toán</h3>
+
+            <div class="mb-6">
+                <label for="payment_proof_input" class="block text-gray-700 text-sm font-semibold mb-2 text-left">Chọn ảnh xác nhận</label>
+                <input type="file" id="payment_proof_input" accept="image/*" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                <p class="text-sm text-gray-500 mt-2 text-left">Chỉ chấp nhận định dạng ảnh (JPG, PNG).</p>
+            </div>
+
+            <p class="text-red-600 font-semibold mb-6">Lưu ý: Thời gian xử lý giao dịch khoảng 15-20 phút.</p>
+
+            <button id="upload_proof_confirm_btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 active:scale-95">
+                Xác nhận tải lên
+            </button>
+
+            <button id="close_upload_proof_modal_btn" class="mt-4 w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <div id="seat_selection_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[10002] p-4 hidden opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-3xl w-full text-center transform scale-95 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Chọn ghế ngồi</h3>
+
+            <div id="seat_selection_content" class="space-y-8">
+                <div id="outbound_seat_map_section">
+                    <h4 class="text-xl font-semibold text-gray-800 mb-4">Chuyến đi: <span id="outbound_flight_details" class="text-blue-600"></span></h4>
+                    <div class="flex justify-center items-center mb-4">
+                        <span class="seat available mr-2"></span> <span class="text-gray-700">Ghế trống</span>
+                        <span class="seat occupied ml-4 mr-2"></span> <span class="text-gray-700">Đã đặt</span>
+                        <span class="seat selected ml-4 mr-2"></span> <span class="text-gray-700">Đang chọn</span>
+                    </div>
+                    <div id="outbound_seat_map" class="grid grid-cols-7 gap-2 mx-auto max-w-fit">
+                    </div>
+                    <p class="text-sm text-gray-600 mt-4">Đã chọn: <span id="outbound_selected_count">0</span>/<span id="outbound_needed_seats">0</span> ghế</p>
+                </div>
+
+                <div id="return_seat_map_section" class="hidden">
+                    <h4 class="text-xl font-semibold text-gray-800 mb-4">Chuyến về: <span id="return_flight_details" class="text-blue-600"></span></h4>
+                    <div class="flex justify-center items-center mb-4">
+                        <span class="seat available mr-2"></span> <span class="text-gray-700">Ghế trống</span>
+                        <span class="seat occupied ml-4 mr-2"></span> <span class="text-gray-700">Đã đặt</span>
+                        <span class="seat selected ml-4 mr-2"></span> <span class="text-gray-700">Đang chọn</span>
+                    </div>
+                    <div id="return_seat_map" class="grid grid-cols-7 gap-2 mx-auto max-w-fit">
+                    </div>
+                    <p class="text-sm text-gray-600 mt-4">Đã chọn: <span id="return_selected_count">0</span>/<span id="return_needed_seats">0</span> ghế</p>
+                </div>
+            </div>
+
+            <button id="confirm_seat_selection_btn" class="mt-8 w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 active:scale-95">
+                Tiếp tục thanh toán
+            </button>
+
+            <button id="close_seat_selection_modal_btn" class="mt-4 w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <div id="history_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[10003] p-4 hidden opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-2xl w-full text-left transform scale-95 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Lịch sử đặt vé</h3>
+            <div id="booking_history_list" class="space-y-4">
+                <p class="text-center text-gray-600" id="no_history_message">Bạn chưa có đặt vé nào.</p>
+            </div>
+            <button id="close_history_modal_btn" class="mt-8 w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <div id="promotions_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[10004] p-4 hidden opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-4xl w-full text-left transform scale-95 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Khuyến mại hấp dẫn</h3>
+            <div id="promotions_list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            </div>
+            <button id="close_promotions_modal_btn" class="mt-8 w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <div id="contact_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[10005] p-4 hidden opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center transform scale-95">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Liên hệ Vietjet Air</h3>
+            <div class="space-y-4 text-gray-700 mb-8">
+                <p class="text-lg"><strong>Địa chỉ:</strong> Tầng 8, Tòa nhà CTCP Hàng không Vietjet, TP.HCM</p>
+                <p class="text-lg"><strong>Hotline:</strong> <span class="font-semibold text-blue-600">1900 1886</span></p>
+                <p class="text-lg"><strong>Email:</strong> contact@vietjetair.com</p>
+            </div>
+            <button id="message_now_btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 active:scale-95">
+                Nhắn tin ngay
+            </button>
+            <button id="close_contact_modal_btn" class="mt-4 w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <div id="chat_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[10006] p-4 hidden opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-lg w-full flex flex-col h-[80vh] transform scale-95">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800">Trò chuyện với Vietjet CSKH</h3>
+                <button id="close_chat_modal_btn" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="mb-4 text-sm text-gray-600">
+                <p>Người gửi: <span id="chat_sender_name" class="font-semibold">Khách hàng</span></p>
+                <p>Người nhận: <span class="font-semibold">Vietjet CSKH</span></p>
+            </div>
+            <div id="chat_messages" class="flex-grow overflow-y-auto p-4 bg-gray-50 rounded-lg mb-4 space-y-3">
+            </div>
+            <div class="flex items-center border-t border-gray-200 pt-4">
+                <input type="text" id="chat_input" placeholder="Nhập tin nhắn của bạn..." class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900 mr-2">
+                <input type="file" id="chat_file_input" class="hidden" accept="image/*,.pdf,.doc,.docx">
+                <button id="chat_attach_btn" class="p-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg mr-2 transition duration-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13.5"></path></svg>
+                </button>
+                <button id="chat_send_btn" class="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="login_register_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[10007] p-4 hidden opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center transform scale-95">
+            <h3 id="auth_modal_title" class="text-2xl font-bold text-gray-800 mb-6">Đăng nhập</h3>
+
+            <div id="login_form">
+                <div class="mb-4 text-left">
+                    <label for="login_username" class="block text-gray-700 text-sm font-semibold mb-2">Tên đăng nhập</label>
+                    <input type="text" id="login_username" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                </div>
+                <div class="mb-6 text-left">
+                    <label for="login_password" class="block text-gray-700 text-sm font-semibold mb-2">Mật khẩu</label>
+                    <input type="password" id="login_password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                </div>
+                <p id="login_error_message" class="text-red-500 text-sm mb-4 hidden"></p>
+                <button id="login_submit_btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 active:scale-95">
+                    Đăng nhập
+                </button>
+                <p class="mt-4 text-gray-600">Chưa có tài khoản? <a href="#" id="show_register_form_link" class="text-blue-600 hover:underline">Đăng ký ngay</a></p>
+            </div>
+
+            <div id="register_form" class="hidden max-h-[70vh] overflow-y-auto">
+                <div class="mb-4 text-left">
+                    <label for="register_username" class="block text-gray-700 text-sm font-semibold mb-2">Tên đăng nhập</label>
+                    <input type="text" id="register_username" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                </div>
+                <div class="mb-4 text-left">
+                    <label for="register_password" class="block text-gray-700 text-sm font-semibold mb-2">Mật khẩu</label>
+                    <input type="password" id="register_password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                </div>
+                <div class="mb-4 text-left">
+                    <label for="register_confirm_password" class="block text-gray-700 text-sm font-semibold mb-2">Xác nhận lại mật khẩu</label>
+                    <input type="password" id="register_confirm_password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                </div>
+                <div class="mb-4 text-left">
+                    <label for="register_fullname" class="block text-gray-700 text-sm font-semibold mb-2">Họ và tên</label>
+                    <input type="text" id="register_fullname" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                </div>
+                <div class="mb-4 text-left">
+                    <label for="register_phone" class="block text-gray-700 text-sm font-semibold mb-2">Số điện thoại</label>
+                    <input type="tel" id="register_phone" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                </div>
+                <div class="mb-4 text-left">
+                    <label for="register_email" class="block text-gray-700 text-sm font-semibold mb-2">Email (không bắt buộc)</label>
+                    <input type="email" id="register_email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                </div>
+                <div class="mb-6 text-left">
+                    <label for="register_province" class="block text-gray-700 text-sm font-semibold mb-2">Tỉnh</label>
+                    <input type="text" id="register_province" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                </div>
+                <p id="register_error_message" class="text-red-500 text-sm mb-4 hidden"></p>
+                <button id="register_submit_btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 active:scale-95">
+                    Đăng ký
+                </button>
+                <p class="mt-4 text-gray-600">Đã có tài khoản? <a href="#" id="show_login_form_link" class="text-blue-600 hover:underline">Đăng nhập</a></p>
+            </div>
+
+            <button id="close_login_register_modal_btn" class="mt-8 w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <div id="profile_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[10008] p-4 hidden opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center transform scale-95 max-h-[80vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Hồ sơ của bạn</h3>
+            <div class="mb-4 text-left">
+                <label for="profile_username" class="block text-gray-700 text-sm font-semibold mb-2">Tên đăng nhập</label>
+                <input type="text" id="profile_username" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed text-gray-900" readonly>
+            </div>
+            <div class="mb-4 text-left">
+                <label for="profile_fullname" class="block text-gray-700 text-sm font-semibold mb-2">Họ và tên</label>
+                <input type="text" id="profile_fullname" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+            </div>
+            <div class="mb-4 text-left">
+                <label for="profile_phone" class="block text-gray-700 text-sm font-semibold mb-2">Số điện thoại</label>
+                <input type="tel" id="profile_phone" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+            </div>
+            <div class="mb-4 text-left">
+                <label for="profile_email" class="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+                <input type="email" id="profile_email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+            </div>
+            <div class="mb-6 text-left">
+                <label for="profile_province" class="block text-gray-700 text-sm font-semibold mb-2">Tỉnh</label>
+                <input type="text" id="profile_province" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+            </div>
+            <p id="profile_error_message" class="text-red-500 text-sm mb-4 hidden"></p>
+            <button id="save_profile_btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 active:scale-95">
+                Lưu thay đổi
+            </button>
+            <button id="close_profile_modal_btn" class="mt-4 w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <div id="admin_settings_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[10009] p-4 hidden opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-4xl w-full text-left transform scale-95 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Bảng điều khiển Admin</h3>
+
+            <div class="flex border-b border-gray-200 mb-6 overflow-x-auto">
+                <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="promotions">Quản lý Khuyến mại</button>
+                <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="vouchers">Quản lý Voucher</button>
+                <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="destinations">Quản lý Điểm đến</button>
+                <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="all_history">Lịch sử Khách hàng</button>
+                <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="advertisement">Cài đặt Quảng cáo</button>
+                <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="messages">Quản lý Tin nhắn</button>
+                <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="payment">Quản lý Thanh toán</button>
+            </div>
+
+            <div id="admin_promotions_tab" class="admin-tab-content">
+                <h4 class="text-xl font-semibold mb-4">Danh sách Khuyến mại</h4>
+                <div id="admin_promotions_list" class="space-y-4 mb-6">
+                </div>
+                <button id="add_promotion_btn" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg">Thêm Khuyến mại mới</button>
+            </div>
+
+            <div id="admin_vouchers_tab" class="admin-tab-content hidden">
+                <h4 class="text-xl font-semibold mb-4">Danh sách Voucher</h4>
+                <div id="admin_vouchers_list" class="space-y-4 mb-6">
+                </div>
+                <button id="add_voucher_btn" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg">Thêm Voucher mới</button>
+            </div>
+
+            <div id="admin_destinations_tab" class="admin-tab-content hidden">
+                <h4 class="text-xl font-semibold mb-4">Danh sách Điểm đến</h4>
+                <div id="admin_destinations_list" class="space-y-4 mb-6">
+                </div>
+                <button id="add_destination_btn" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg">Thêm Điểm đến mới</button>
+            </div>
+
+            <div id="admin_all_history_tab" class="admin-tab-content hidden">
+                <h4 class="text-xl font-semibold mb-4">Lịch sử đặt vé của tất cả khách hàng</h4>
+                <div id="admin_all_history_list" class="space-y-4">
+                    <p class="text-center text-gray-600" id="no_all_history_message">Chưa có lịch sử đặt vé nào.</p>
+                </div>
+            </div>
+
+            <div id="admin_advertisement_tab" class="admin-tab-content hidden">
+                <h4 class="text-xl font-semibold mb-4">Cài đặt Quảng cáo</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label for="hero_background_image_url" class="block text-gray-700 text-sm font-semibold mb-2">URL Ảnh nền (Khám phá thế giới cùng Vietjet Air)</label>
+                        <input type="text" id="hero_background_image_url" placeholder="Nhập URL ảnh nền cho Hero Section" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                        <p class="text-xs text-gray-500 mt-1">Sử dụng URL ảnh trực tiếp hoặc để trống để dùng ảnh mặc định.</p>
+                    </div>
+                    <div>
+                        <label for="popular_destinations_background_image_url" class="block text-gray-700 text-sm font-semibold mb-2">URL Ảnh nền (Điểm đến nổi bật & Ưu đãi hấp dẫn)</label>
+                        <input type="text" id="popular_destinations_background_image_url" placeholder="Nhập URL ảnh nền cho Điểm đến nổi bật" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                        <p class="text-xs text-gray-500 mt-1">Sử dụng URL ảnh trực tiếp hoặc để trống để dùng ảnh mặc định.</p>
+                    </div>
+                    <div>
+                        <label for="floating_icon_url" class="block text-gray-700 text-sm font-semibold mb-2">URL Icon trôi nổi</label>
+                        <input type="text" id="floating_icon_url" placeholder="Nhập URL icon (ví dụ: logo-vj.jpg)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                        <p class="text-xs text-gray-500 mt-1">Icon này sẽ xuất hiện ở góc dưới bên phải với hiệu ứng trôi nổi.</p>
+                    </div>
+                    <button id="save_advertisement_settings_btn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 transform hover:scale-105 active:scale-95">
+                        Lưu cài đặt Quảng cáo
+                    </button>
+                </div>
+            </div>
+
+            <div id="admin_messages_tab" class="admin-tab-content hidden">
+                <h4 class="text-xl font-semibold mb-4">Tin nhắn từ khách hàng</h4>
+                <div id="admin_chat_list" class="space-y-4 mb-6">
+                </div>
+                <div id="admin_chat_conversation" class="hidden bg-gray-50 p-4 rounded-lg">
+                    <h5 class="text-lg font-semibold mb-3">Trò chuyện với: <span id="current_chat_username" class="text-blue-600"></span></h5>
+                    <div id="admin_chat_messages_display" class="max-h-60 overflow-y-auto p-3 bg-white rounded-lg mb-4 space-y-2">
+                    </div>
+                    <div class="flex">
+                        <input type="text" id="admin_chat_input" placeholder="Nhập tin nhắn trả lời..." class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 mr-2">
+                        <button id="admin_send_chat_btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">Gửi</button>
+                    </div>
+                    <button id="back_to_chat_list_btn" class="mt-4 bg-gray-400 hover:bg-gray-500 text-white px-3 py-1 rounded-lg">Quay lại danh sách</button>
+                </div>
+            </div>
+
+            <div id="admin_payment_tab" class="admin-tab-content hidden">
+                <h4 class="text-xl font-semibold mb-4">Cài đặt Thanh toán</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label for="admin_qr_code_url" class="block text-gray-700 text-sm font-semibold mb-2">URL Ảnh QR Code</label>
+                        <input type="text" id="admin_qr_code_url" placeholder="Nhập URL ảnh QR Code" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                    </div>
+                    <div>
+                        <label for="admin_bank_name" class="block text-gray-700 text-sm font-semibold mb-2">Tên Ngân hàng</label>
+                        <input type="text" id="admin_bank_name" placeholder="Ví dụ: Vietcombank" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                    </div>
+                    <div>
+                        <label for="admin_account_holder" class="block text-gray-700 text-sm font-semibold mb-2">Chủ tài khoản</label>
+                        <input type="text" id="admin_account_holder" placeholder="Ví dụ: NGUYEN VAN A" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                    </div>
+                    <div>
+                        <label for="admin_account_number" class="block text-gray-700 text-sm font-semibold mb-2">Số tài khoản</label>
+                        <input type="text" id="admin_account_number" placeholder="Ví dụ: 0011001234567" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                    </div>
+                    <button id="save_payment_settings_btn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 transform hover:scale-105 active:scale-95">
+                        Lưu cài đặt Thanh toán
+                    </button>
+                </div>
+            </div>
+
+            <button id="close_admin_settings_modal_btn" class="mt-8 w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <div id="floating_ad_icon_container" class="floating-icon-container hidden">
+        <img id="floating_ad_icon" src="" alt="Floating Ad Icon">
+        <span id="unread_count_badge" class="unread-badge hidden">0</span>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyDFiZ_TAgs9QsrPLEYXAlD0xVZljdeenv4",
+            authDomain: "vietjetvoucher.firebaseapp.com",
+            projectId: "vietjetvoucher",
+            storageBucket: "vietjetvoucher.firebasestorage.app",
+            appId: "1:988493434015:web:39ad2631e287249e5ca6aa",
+            measurementId: "G-6NF4ZVPRXN"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let loggedInUser = null;
+        let currentUserId = null;
+
+        let usersDataCache = [];
+        let allBookingHistoryCache = [];
+        let promotionsDataCache = [];
+        let domesticAirportsDataCache = [];
+        let vouchersDataCache = [];
+        let appSettingsCache = {};
+        let paymentDetailsCache = {};
+        let chatSessionsCache = [];
+        let currentOpenChatId = null;
+
+        const flightTypeRadios = document.querySelectorAll('input[name="flight_type"]');
+        const returnDateField = document.getElementById('return_date_field');
+        const departDateInput = document.getElementById('depart_date');
+        const returnDateInput = document.getElementById('return_date');
+        const passengersInput = document.getElementById('passengers');
+        const openPassengerModalBtn = document.getElementById('open_passenger_modal_btn');
+        const searchFlightBtn = document.getElementById('search_flight_btn');
+        const searchButtonText = document.getElementById('search_button_text');
+        const searchSpinner = document.getElementById('search_spinner');
+
+        const passengerModal = document.getElementById('passenger_modal');
+        const adultCountInput = document.getElementById('adult_count');
+        const childCountInput = document.getElementById('child_count');
+        const infantCountInput = document.getElementById('infant_count');
+        const confirmPassengerBtn = document.getElementById('confirm_passenger_btn');
+
+        const flightResultsModal = document.getElementById('flight_results_modal');
+        const searchSummary = document.getElementById('search_summary');
+        const oneWayFlightList = document.getElementById('one_way_flight_list');
+        const roundTripFlightsSection = document.getElementById('round_trip_flights_section');
+        const outboundFlightsList = document.getElementById('outbound_flights_list');
+        const returnFlightsList = document.getElementById('return_flights_list');
+        const roundTripSelectionMessage = document.getElementById('round_trip_selection_message');
+        const confirmRoundTripSelectionBtn = document.getElementById('confirm_round_trip_selection_btn');
+        const noFlightsMessage = document.getElementById('no_flights_message');
+        const closeResultsModalBtn = document.getElementById('close_results_modal_btn');
+
+        const paymentModal = document.getElementById('payment_modal');
+        const selectedFlightInfo = document.getElementById('selected_flight_info');
+        const originalPriceDisplay = document.getElementById('original_price_display');
+        const originalPriceValue = document.getElementById('original_price_value');
+        const finalPriceDisplay = document.getElementById('final_price_display');
+        const finalPriceValue = document.getElementById('final_price_value');
+        const paymentAmountDisplay = document.getElementById('payment_amount_display');
+        const voucherCodeInput = document.getElementById('voucher_code');
+        const applyVoucherBtn = document.getElementById('apply_voucher_btn');
+        const voucherMessage = document.getElementById('voucher_message');
+        const proceedToPaymentBtn = document.getElementById('proceed_to_payment_btn');
+        const qrPaymentDetails = document.getElementById('qr_payment_details');
+        const qrCodeImg = document.getElementById('qr_code_img');
+        const bankNameDisplay = document.getElementById('bank_name');
+        const accountHolderDisplay = document.getElementById('account_holder');
+        const accountNumberDisplay = document.getElementById('account_number');
+        const transferContent = document.getElementById('transfer_content');
+        const confirmPaymentBtn = document.getElementById('confirm_payment_btn');
+        const closePaymentModalBtn = document.getElementById('close_payment_modal_btn');
+
+        const uploadProofModal = document.getElementById('upload_proof_modal');
+        const paymentProofInput = document.getElementById('payment_proof_input');
+        const uploadProofConfirmBtn = document.getElementById('upload_proof_confirm_btn');
+        const closeUploadProofModalBtn = document.getElementById('close_upload_proof_modal_btn');
+
+        const seatSelectionModal = document.getElementById('seat_selection_modal');
+        const outboundSeatMapSection = document.getElementById('outbound_seat_map_section');
+        const outboundFlightDetails = document.getElementById('outbound_flight_details');
+        const outboundSeatMap = document.getElementById('outbound_seat_map');
+        const outboundSelectedCountSpan = document.getElementById('outbound_selected_count');
+        const outboundNeededSeatsSpan = document.getElementById('outbound_needed_seats');
+
+        const returnSeatMapSection = document.getElementById('return_seat_map_section');
+        const returnFlightDetails = document.getElementById('return_flight_details');
+        const returnSeatMap = document.getElementById('return_seat_map');
+        const returnSelectedCountSpan = document.getElementById('return_selected_count');
+        const returnNeededSeatsSpan = document.getElementById('return_needed_seats');
+
+        const confirmSeatSelectionBtn = document.getElementById('confirm_seat_selection_btn');
+        const closeSeatSelectionModalBtn = document.getElementById('close_seat_selection_modal_btn');
+
+        const loginStatusBtn = document.getElementById('login_status_btn');
+        const historyNavLink = document.getElementById('history_nav_link');
+        const historyModal = document.getElementById('history_modal');
+        const bookingHistoryList = document.getElementById('booking_history_list');
+        const noHistoryMessage = document.getElementById('no_history_message');
+        const closeHistoryModalBtn = document.getElementById('close_history_modal_btn');
+
+        const promotionsNavLink = document.getElementById('promotions_nav_link');
+        const promotionsModal = document.getElementById('promotions_modal');
+        const promotionsList = document.getElementById('promotions_list');
+        const closePromotionsModalBtn = document.getElementById('close_promotions_modal_btn');
+
+        const contactNavLink = document.getElementById('contact_nav_link');
+        const contactModal = document.getElementById('contact_modal');
+        const messageNowBtn = document.getElementById('message_now_btn');
+        const closeContactModalBtn = document.getElementById('close_contact_modal_btn');
+
+        const chatModal = document.getElementById('chat_modal');
+        const chatSenderName = document.getElementById('chat_sender_name');
+        const chatMessages = document.getElementById('chat_messages');
+        const chatInput = document.getElementById('chat_input');
+        const chatAttachBtn = document.getElementById('chat_attach_btn');
+        const chatFileInput = document.getElementById('chat_file_input');
+        const chatSendBtn = document.getElementById('chat_send_btn');
+        const closeChatModalBtn = document.getElementById('close_chat_modal_btn'); 
+
+        const loginRegisterModal = document.getElementById('login_register_modal');
+        const authModalTitle = document.getElementById('auth_modal_title');
+        const loginForm = document.getElementById('login_form');
+        const registerForm = document.getElementById('register_form');
+        const showRegisterFormLink = document.getElementById('show_register_form_link');
+        const showLoginFormLink = document.getElementById('show_login_form_link');
+        const loginUsernameInput = document.getElementById('login_username');
+        const loginPasswordInput = document.getElementById('login_password');
+        const loginSubmitBtn = document.getElementById('login_submit_btn');
+        const loginErrorMessage = document.getElementById('login_error_message');
+        const registerUsernameInput = document.getElementById('register_username');
+        const registerPasswordInput = document.getElementById('register_password');
+        const registerConfirmPasswordInput = document.getElementById('register_confirm_password');
+        const registerFullnameInput = document.getElementById('register_fullname');
+        const registerPhoneInput = document.getElementById('register_phone');
+        const registerEmailInput = document.getElementById('register_email');
+        const registerProvinceInput = document.getElementById('register_province');
+        const registerSubmitBtn = document.getElementById('register_submit_btn');
+        const registerErrorMessage = document.getElementById('register_error_message');
+        const closeLoginRegisterModalBtn = document.getElementById('close_login_register_modal_btn');
+
+        const profileNavItem = document.getElementById('profile_nav_item');
+        const profileNavLink = document.getElementById('profile_nav_link');
+        const profileModal = document.getElementById('profile_modal');
+        const profileUsernameInput = document.getElementById('profile_username');
+        const profileFullnameInput = document.getElementById('profile_fullname');
+        const profilePhoneInput = document.getElementById('profile_phone');
+        const profileEmailInput = document.getElementById('profile_email');
+        const profileProvinceInput = document.getElementById('profile_province');
+        const saveProfileBtn = document.getElementById('save_profile_btn');
+        const profileErrorMessage = document.getElementById('profile_error_message');
+        const closeProfileModalBtn = document.getElementById('close_profile_modal_btn');
+
+        const adminSettingsNavItem = document.getElementById('admin_settings_nav_item');
+        const adminSettingsNavLink = document.getElementById('admin_settings_nav_link');
+        const adminSettingsModal = document.getElementById('admin_settings_modal');
+        const closeAdminSettingsModalBtn = document.getElementById('close_admin_settings_modal_btn');
+        const adminTabButtons = document.querySelectorAll('.admin-tab-btn');
+        const adminPromotionsTab = document.getElementById('admin_promotions_tab');
+        const adminVouchersTab = document.getElementById('admin_vouchers_tab');
+        const adminDestinationsTab = document.getElementById('admin_destinations_tab');
+        const adminAllHistoryTab = document.getElementById('admin_all_history_tab');
+        const adminAdvertisementTab = document.getElementById('admin_advertisement_tab');
+        const adminMessagesTab = document.getElementById('admin_messages_tab');
+        const adminPaymentTab = document.getElementById('admin_payment_tab');
+
+        const adminPromotionsList = document.getElementById('admin_promotions_list');
+        const adminVouchersList = document.getElementById('admin_vouchers_list');
+        const adminDestinationsList = document.getElementById('admin_destinations_list');
+        const adminAllHistoryList = document.getElementById('admin_all_history_list');
+        const noAllHistoryMessage = document.getElementById('no_all_history_message');
+        const addPromotionBtn = document.getElementById('add_promotion_btn');
+        const addVoucherBtn = document.getElementById('add_voucher_btn');
+        const addDestinationBtn = document.getElementById('add_destination_btn');
+
+        const adminChatList = document.getElementById('admin_chat_list');
+        const adminChatConversation = document.getElementById('admin_chat_conversation');
+        const currentChatUsername = document.getElementById('current_chat_username');
+        const adminChatMessagesDisplay = document.getElementById('admin_chat_messages_display');
+        const adminChatInput = document.getElementById('admin_chat_input');
+        const adminSendChatBtn = document.getElementById('admin_send_chat_btn');
+        const backToChatListBtn = document.getElementById('back_to_chat_list_btn');
+
+        const adminQrCodeUrlInput = document.getElementById('admin_qr_code_url');
+        const adminBankNameInput = document.getElementById('admin_bank_name');
+        const adminAccountHolderInput = document.getElementById('admin_account_holder');
+        const adminAccountNumberInput = document.getElementById('admin_account_number');
+        const savePaymentSettingsBtn = document.getElementById('save_payment_settings_btn');
+
+        const popularDestinationsList = document.getElementById('popular_destinations_list');
+        const destinationInput = document.getElementById('destination');
+
+        const heroBackground = document.getElementById('hero_background');
+        const popularDestinationsBackground = document.getElementById('popular_destinations_background');
+        const floatingAdIconContainer = document.getElementById('floating_ad_icon_container');
+        const floatingAdIcon = document.getElementById('floating_ad_icon');
+        const unreadCountBadge = document.getElementById('unread_count_badge');
+        const heroBackgroundImageUrlInput = document.getElementById('hero_background_image_url');
+        const popularDestinationsBackgroundImageUrlInput = document.getElementById('popular_destinations_background_image_url');
+        const floatingIconUrlInput = document.getElementById('floating_icon_url');
+        const saveAdvertisementSettingsBtn = document.getElementById('save_advertisement_settings_btn');
+
+        let currentSelectedFlight = null;
+        let tempSelectedOutboundFlight = null;
+        let tempSelectedReturnFlight = null;
+        let selectedOutboundSeats = [];
+        let selectedReturnSeats = [];
+
+        let adultPassengers = 1;
+        let childPassengers = 0;
+        let infantPassengers = 0;
+
+        const formatDate = (date) => {
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        };
+
+        function showModal(modalElement) {
+            modalElement.classList.remove('hidden');
+            setTimeout(() => {
+                modalElement.classList.add('modal-enter');
+                const innerDiv = modalElement.querySelector('div');
+                if (innerDiv) {
+                    innerDiv.classList.add('modal-enter');
+                }
+            }, 10);
+        }
+
+        function hideModal(modalElement) {
+            modalElement.classList.remove('modal-enter');
+            modalElement.classList.add('modal-exit');
+            const innerDiv = modalElement.querySelector('div');
+            if (innerDiv) {
+                innerDiv.classList.remove('modal-enter');
+                innerDiv.classList.add('modal-exit');
+            }
+
+            modalElement.addEventListener('animationend', function handler() {
+                modalElement.classList.add('hidden');
+                modalElement.classList.remove('modal-exit');
+                if (innerDiv) {
+                    innerDiv.classList.remove('modal-exit');
+                }
+                modalElement.removeEventListener('animationend', handler);
+            });
+        }
+
+        function showCustomAlert(message) {
+            let alertBox = document.getElementById('customAlert');
+            if (!alertBox) {
+                alertBox = document.createElement('div');
+                alertBox.id = 'customAlert';
+                alertBox.className = 'fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[9999] p-4 opacity-0';
+                alertBox.innerHTML = `
+                    <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center transform scale-95">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Thông báo</h3>
+                        <p class="text-gray-700 whitespace-pre-wrap mb-6">${message}</p>
+                        <button id="closeAlert" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">Đóng</button>
+                    </div>
+                `;
+                document.body.appendChild(alertBox);
+                setTimeout(() => {
+                    alertBox.classList.add('modal-enter');
+                    alertBox.querySelector('div').classList.add('modal-enter');
+                }, 10);
+
+                document.getElementById('closeAlert').addEventListener('click', function() {
+                    alertBox.classList.remove('modal-enter');
+                    alertBox.classList.add('modal-exit');
+                    alertBox.querySelector('div').classList.remove('modal-enter');
+                    alertBox.querySelector('div').classList.add('modal-exit');
+
+                    alertBox.addEventListener('animationend', function handler() {
+                        alertBox.remove();
+                        alertBox.removeEventListener('animationend', handler);
+                    });
+                });
+            } else {
+                alertBox.querySelector('p').innerText = message;
+                alertBox.classList.remove('hidden', 'modal-exit');
+                alertBox.classList.add('modal-enter');
+                alertBox.querySelector('div').classList.remove('modal-exit');
+                alertBox.querySelector('div').classList.add('modal-enter');
+            }
+        }
+
+        function toggleReturnDateField() {
+            const flightType = document.querySelector('input[name="flight_type"]:checked').value;
+            if (flightType === 'one_way') {
+                returnDateField.classList.add('hidden');
+                returnDateInput.value = '';
+            } else {
+                returnDateField.classList.remove('hidden');
+            }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            updateHeaderNav();
+            if (historyModal.classList.contains('modal-enter')) renderBookingHistory();
+            if (adminSettingsModal.classList.contains('modal-enter')) showAdminTab(document.querySelector('.admin-tab-btn.border-blue-500')?.dataset.tab || 'promotions');
+            if (loggedInUser && !loggedInUser.isAdmin) {
+                // Listen for user's specific chat updates to render unread count
+                onSnapshot(doc(db, `artifacts/${appId}/public/data/chats`, loggedInUser.username), (docSnap) => {
+                    if (docSnap.exists()) {
+                        const chatData = docSnap.data();
+                        const chatIndex = chatSessionsCache.findIndex(c => c.id === docSnap.id);
+                        if (chatIndex > -1) {
+                            chatSessionsCache[chatIndex] = { id: docSnap.id, ...chatData };
+                        } else {
+                            chatSessionsCache.push({ id: docSnap.id, ...chatData });
+                        }
+                        renderUnreadCount();
+                    } else {
+                        // If chat document doesn't exist, remove from cache and hide badge
+                        chatSessionsCache = chatSessionsCache.filter(c => c.id !== loggedInUser.username);
+                        renderUnreadCount();
+                    }
+                }, (error) => console.error("Error fetching specific user chat:", error));
+            }
+            renderUnreadCount(); // Initial render of unread count
+        });
+
+        async function authenticateUser() {
+            try {
+                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                const airportsCollectionRef = collection(db, `artifacts/${appId}/public/data/airports`);
+                const airportsSnapshot = await getDocs(airportsCollectionRef);
+                if (airportsSnapshot.empty) {
+                    const defaultAirports = [
+                        { name: "Hà Nội (HAN)", basePrice: 1000000, image: "https://placehold.co/400x250/FFD700/000000?text=Hanoi", description: "Thủ đô ngàn năm văn hiến với những di tích lịch sử và ẩm thực phong phú." },
+                        { name: "TP. Hồ Chí Minh (SGN)", basePrice: 1200000, image: "https://placehold.co/400x250/FFA500/000000?text=HCM", description: "Thành phố sôi động, trung tâm kinh tế và văn hóa phía Nam." },
+                        { name: "Đà Nẵng (DAD)", basePrice: 800000, image: "https://placehold.co/400x250/FF4500/000000?text=Danang", description: "Thành phố biển xinh đẹp với cầu Rồng và bãi biển Mỹ Khê." },
+                        { name: "Phú Quốc (PQC)", basePrice: 1500000, image: "https://placehold.co/400x250/8A2BE2/FFFFFF?text=Phu+Quoc", description: "Đảo ngọc với những bãi biển hoang sơ và hải sản tươi ngon." },
+                        { name: "Đà Lạt (DLI)", basePrice: 900000, image: "https://placehold.co/400x250/4169E1/FFFFFF?text=Dalat", description: "Thành phố ngàn hoa với khí hậu mát mẻ quanh năm." },
+                        { name: "Nha Trang (CXR)", basePrice: 950000, image: "https://placehold.co/400x250/6A5ACD/FFFFFF?text=Nha+Trang", description: "Thiên đường biển với các hoạt động lặn biển và đảo đẹp." },
+                        { name: "Huế (HUI)", basePrice: 750000, image: "https://placehold.co/400x250/20B2AA/FFFFFF?text=Hue", description: "Cố đô trầm mặc với quần thể di tích lịch sử được UNESCO công nhận." }
+                    ];
+                    for (const airport of defaultAirports) {
+                        await setDoc(doc(db, `artifacts/${appId}/public/data/airports`, airport.name), airport);
+                    }
+                }
+            } catch (error) {
+                showCustomAlert("Lỗi xác thực Firebase ban đầu: " + error.message);
+            }
+        }
+
+        onSnapshot(collection(db, `artifacts/${appId}/public/data/promotions`), (snapshot) => {
+            promotionsDataCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            if (promotionsModal.classList.contains('modal-enter')) renderPromotions();
+            renderPopularDestinations();
+        }, (error) => console.error("Error fetching promotions:", error));
+
+        onSnapshot(collection(db, `artifacts/${appId}/public/data/airports`), (snapshot) => {
+            domesticAirportsDataCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            updateAirportDatalists();
+            renderPopularDestinations();
+        }, (error) => console.error("Error fetching airports:", error));
+
+        onSnapshot(collection(db, `artifacts/${appId}/public/data/vouchers`), (snapshot) => {
+            vouchersDataCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            if (adminSettingsModal.classList.contains('modal-enter') && document.querySelector('.admin-tab-btn.border-blue-500')?.dataset.tab === 'vouchers') {
+                renderAdminVouchers();
+            }
+        }, (error) => console.error("Error fetching vouchers:", error));
+
+        onSnapshot(collection(db, `artifacts/${appId}/public/data/allBookingHistory`), (snapshot) => {
+            allBookingHistoryCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            if (adminSettingsModal.classList.contains('modal-enter') && document.querySelector('.admin-tab-btn.border-blue-500')?.dataset.tab === 'all_history') {
+                renderAdminAllHistory();
+            }
+        }, (error) => console.error("Error fetching all booking history:", error));
+
+        onSnapshot(doc(db, `artifacts/${appId}/public/data/appSettings`, 'advertisement'), (docSnap) => {
+            if (docSnap.exists()) {
+                appSettingsCache = docSnap.data();
+                applyAdvertisementSettings(); // Apply settings immediately on fetch
+                if (adminSettingsModal.classList.contains('modal-enter') && document.querySelector('.admin-tab-btn.border-blue-500')?.dataset.tab === 'advertisement') {
+                    loadAdvertisementSettingsToForm();
+                }
+            } else {
+                appSettingsCache = {};
+                applyAdvertisementSettings(); // Apply default settings if no doc exists
+            }
+        }, (error) => console.error("Error fetching app settings:", error));
+
+        onSnapshot(doc(db, `artifacts/${appId}/public/data/appSettings`, 'paymentDetails'), (docSnap) => {
+            if (docSnap.exists()) {
+                paymentDetailsCache = docSnap.data();
+                if (adminSettingsModal.classList.contains('modal-enter') && document.querySelector('.admin-tab-btn.border-blue-500')?.dataset.tab === 'payment') {
+                    loadPaymentSettingsToForm();
+                }
+            } else {
+                paymentDetailsCache = {};
+            }
+        }, (error) => console.error("Error fetching payment settings:", error));
+
+        onSnapshot(collection(db, `artifacts/${appId}/public/data/chats`), (snapshot) => {
+            chatSessionsCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            if (adminSettingsModal.classList.contains('modal-enter') && document.querySelector('.admin-tab-btn.border-blue-500')?.dataset.tab === 'messages') {
+                renderAdminChatList();
+            }
+            if (chatModal.classList.contains('modal-enter') && loggedInUser) {
+                const userChat = chatSessionsCache.find(chat => chat.userId === loggedInUser.username);
+                if (userChat) {
+                    renderChatMessages(userChat.messages);
+                }
+            }
+            renderUnreadCount(); // Update unread count when chat sessions change
+        }, (error) => console.error("Error fetching chat sessions:", error));
+
+        function updateHeaderNav() {
+            if (loggedInUser) {
+                loginStatusBtn.innerText = loggedInUser.username;
+                loginStatusBtn.onclick = logoutUser;
+                adminSettingsNavItem.classList.toggle('hidden', !loggedInUser.isAdmin);
+                profileNavItem.classList.remove('hidden');
+                chatSenderName.innerText = loggedInUser.username;
+            } else {
+                loginStatusBtn.innerText = 'Đăng nhập';
+                loginStatusBtn.onclick = () => showModal(loginRegisterModal);
+                adminSettingsNavItem.classList.add('hidden');
+                profileNavItem.classList.add('hidden');
+                chatSenderName.innerText = 'Khách hàng';
+            }
+        }
+
+        async function registerUser() {
+            const username = registerUsernameInput.value.trim();
+            const password = registerPasswordInput.value.trim();
+            const confirmPassword = registerConfirmPasswordInput.value.trim();
+            const fullname = registerFullnameInput.value.trim();
+            const phone = registerPhoneInput.value.trim();
+            const email = registerEmailInput.value.trim();
+            const province = registerProvinceInput.value.trim();
+
+            if (!username || !password || !confirmPassword || !fullname || !phone || !province) {
+                registerErrorMessage.innerText = 'Vui lòng điền đầy đủ thông tin (Email không bắt buộc).';
+                registerErrorMessage.classList.remove('hidden');
+                return;
+            }
+            if (password !== confirmPassword) {
+                registerErrorMessage.innerText = 'Mật khẩu và xác nhận mật khẩu không khớp.';
+                registerErrorMessage.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                const userProfileDocRef = doc(db, `artifacts/${appId}/users/${username}/profile/data`);
+                const userSnap = await getDoc(userProfileDocRef);
+                if (userSnap.exists()) {
+                    registerErrorMessage.innerText = 'Tên đăng nhập đã tồn tại.';
+                    registerErrorMessage.classList.remove('hidden');
+                    return;
+                }
+
+                const isAdminUser = (username === 'admin@vietjet.com');
+
+                await setDoc(userProfileDocRef, {
+                    username,
+                    password,
+                    fullname,
+                    phone,
+                    email,
+                    province,
+                    isAdmin: isAdminUser
+                });
+
+                showCustomAlert('Đăng ký thành công! Vui lòng đăng nhập.');
+                registerErrorMessage.classList.add('hidden');
+                authModalTitle.innerText = 'Đăng nhập';
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                loginUsernameInput.value = username;
+                loginPasswordInput.value = '';
+            } catch (error) {
+                registerErrorMessage.innerText = 'Lỗi khi đăng ký: ' + error.message;
+                registerErrorMessage.classList.remove('hidden');
+            }
+        }
+
+        async function loginUser() {
+            const username = loginUsernameInput.value.trim();
+            const password = loginPasswordInput.value.trim();
+
+            if (!username || !password) {
+                loginErrorMessage.innerText = 'Vui lòng nhập tên đăng nhập và mật khẩu.';
+                loginErrorMessage.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                const userProfileDocRef = doc(db, `artifacts/${appId}/users/${username}/profile/data`);
+                const userDocSnap = await getDoc(userProfileDocRef);
+
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    if (userData.password === password) {
+                        loggedInUser = { id: username, ...userData };
+                        currentUserId = username;
+
+                        updateHeaderNav();
+                        hideModal(loginRegisterModal);
+                        showCustomAlert(`Chào mừng, ${loggedInUser.fullname}!`);
+                        loginErrorMessage.classList.add('hidden');
+
+                        if (!loggedInUser.isAdmin) {
+                            onSnapshot(collection(db, `artifacts/${appId}/users/${currentUserId}/bookings`), (snapshot) => {
+                                loggedInUser.history = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                                if (historyModal.classList.contains('modal-enter')) renderBookingHistory();
+                            }, (error) => console.error("Error fetching user history:", error));
+                        }
+                    } else {
+                        loginErrorMessage.innerText = 'Sai mật khẩu.';
+                        loginErrorMessage.classList.remove('hidden');
+                    }
+                } else {
+                    loginErrorMessage.innerText = 'Tên đăng nhập không tồn tại.';
+                    loginErrorMessage.classList.remove('hidden');
+                }
+            } catch (error) {
+                loginErrorMessage.innerText = 'Lỗi khi đăng nhập: ' + error.message;
+                loginErrorMessage.classList.remove('hidden');
+            }
+        }
+
+        function logoutUser() {
+            loggedInUser = null;
+            currentUserId = null;
+            updateHeaderNav();
+            showCustomAlert('Bạn đã đăng xuất.');
+            renderUnreadCount(); // Update unread count after logout
+        }
+
+        function updatePassengerDisplay() {
+            const totalPassengers = adultPassengers + childPassengers + infantPassengers;
+            let displayText = `${totalPassengers} Hành khách`;
+            if (adultPassengers > 0) displayText += ` (${adultPassengers} NL`;
+            if (childPassengers > 0) displayText += `, ${childPassengers} TE`;
+            if (infantPassengers > 0) displayText += `, ${infantPassengers} SS`;
+            if (totalPassengers > 0) displayText += `)`;
+            passengersInput.value = displayText;
+        }
+
+        function getPromotionDiscount(destinationName) {
+            const promo = promotionsDataCache.find(p => p.destination === destinationName);
+            return promo ? promo.discountPercent : 0;
+        }
+
+        function getAirportBasePrice(airportName) {
+            const airport = domesticAirportsDataCache.find(a => a.name === airportName);
+            return airport ? airport.basePrice : 0;
+        }
+
+        loginStatusBtn.addEventListener('click', () => {
+            if (!loggedInUser) {
+                showModal(loginRegisterModal);
+                authModalTitle.innerText = 'Đăng nhập';
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                loginErrorMessage.classList.add('hidden');
+            } else {
+                logoutUser();
+            }
+        });
+
+        showRegisterFormLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authModalTitle.innerText = 'Đăng ký';
+            loginForm.classList.add('hidden');
+            registerForm.classList.remove('hidden');
+            registerErrorMessage.classList.add('hidden');
+        });
+
+        showLoginFormLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authModalTitle.innerText = 'Đăng nhập';
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+            loginErrorMessage.classList.add('hidden');
+        });
+
+        loginSubmitBtn.addEventListener('click', loginUser);
+        registerSubmitBtn.addEventListener('click', registerUser);
+        closeLoginRegisterModalBtn.addEventListener('click', () => hideModal(loginRegisterModal));
+
+        profileNavLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (loggedInUser) {
+                profileUsernameInput.value = loggedInUser.username;
+                profileFullnameInput.value = loggedInUser.fullname;
+                profilePhoneInput.value = loggedInUser.phone;
+                profileEmailInput.value = loggedInUser.email || '';
+                profileProvinceInput.value = loggedInUser.province;
+                profileErrorMessage.classList.add('hidden');
+                showModal(profileModal);
+            } else {
+                showCustomAlert("Vui lòng đăng nhập để xem hồ sơ.");
+            }
+        });
+
+        saveProfileBtn.addEventListener('click', async () => {
+            if (!loggedInUser) {
+                profileErrorMessage.innerText = 'Bạn chưa đăng nhập.';
+                profileErrorMessage.classList.remove('hidden');
+                return;
+            }
+
+            const fullname = profileFullnameInput.value.trim();
+            const phone = profilePhoneInput.value.trim();
+            const email = profileEmailInput.value.trim();
+            const province = profileProvinceInput.value.trim();
+
+            if (!fullname || !phone || !province) {
+                profileErrorMessage.innerText = 'Vui lòng điền đầy đủ thông tin (Email không bắt buộc).';
+                profileErrorMessage.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                const userProfileDocRef = doc(db, `artifacts/${appId}/users/${loggedInUser.username}/profile/data`);
+                await updateDoc(userProfileDocRef, {
+                    fullname,
+                    phone,
+                    email,
+                    province
+                });
+                loggedInUser.fullname = fullname;
+                loggedInUser.phone = phone;
+                loggedInUser.email = email;
+                loggedInUser.province = province;
+                showCustomAlert('Cập nhật hồ sơ thành công!');
+                hideModal(profileModal);
+                updateHeaderNav();
+            } catch (error) {
+                profileErrorMessage.innerText = 'Lỗi khi cập nhật hồ sơ: ' + error.message;
+                profileErrorMessage.classList.remove('hidden');
+            }
+        });
+
+        closeProfileModalBtn.addEventListener('click', () => hideModal(profileModal));
+
+        flightTypeRadios.forEach(radio => {
+            radio.addEventListener('change', toggleReturnDateField);
+        });
+        toggleReturnDateField();
+        updatePassengerDisplay();
+
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        departDateInput.min = formatDate(today);
+        returnDateInput.min = formatDate(tomorrow);
+
+        departDateInput.addEventListener('change', function() {
+            const selectedDepartDate = new Date(this.value);
+            const minReturnDate = new Date(selectedDepartDate);
+            minReturnDate.setDate(selectedDepartDate.getDate() + 1);
+            returnDateInput.min = formatDate(minReturnDate);
+            if (returnDateInput.value && new Date(returnDateInput.value) < minReturnDate) {
+                returnDateInput.value = formatDate(minReturnDate);
+            }
+        });
+
+        openPassengerModalBtn.addEventListener('click', function() {
+            adultCountInput.value = adultPassengers;
+            childCountInput.value = childPassengers;
+            infantCountInput.value = infantPassengers;
+            showModal(passengerModal);
+        });
+
+        passengerModal.addEventListener('click', function(event) {
+            const target = event.target;
+            if (target.tagName === 'BUTTON' && (target.dataset.action === 'increase' || target.dataset.action === 'decrease')) {
+                const type = target.dataset.type;
+                const action = target.dataset.action;
+                let countInput;
+
+                if (type === 'adult') countInput = adultCountInput;
+                else if (type === 'child') countInput = childCountInput;
+                else if (type === 'infant') countInput = infantCountInput;
+
+                let currentValue = parseInt(countInput.value);
+
+                if (action === 'increase') {
+                    if (type === 'infant' && currentValue >= adultPassengers) {
+                        return;
+                    }
+                    currentValue++;
+                } else if (action === 'decrease') {
+                    if (currentValue > (type === 'adult' ? 1 : 0)) {
+                        currentValue--;
+                    }
+                }
+                countInput.value = currentValue;
+
+                if (type === 'adult') adultPassengers = currentValue;
+                else if (type === 'child') childPassengers = currentValue;
+                else if (type === 'infant') infantPassengers = currentValue;
+
+                if (infantPassengers > adultPassengers) {
+                    infantPassengers = adultPassengers;
+                    infantCountInput.value = adultPassengers;
+                }
+            }
+        });
+
+        confirmPassengerBtn.addEventListener('click', function() {
+            adultPassengers = parseInt(adultCountInput.value);
+            childPassengers = parseInt(childCountInput.value);
+            infantPassengers = parseInt(infantCountInput.value);
+            updatePassengerDisplay();
+            hideModal(passengerModal);
+        });
+
+        popularDestinationsList.addEventListener('click', function(event) {
+            const target = event.target;
+            if (target.classList.contains('btn-dat-ngay')) {
+                const destinationName = target.dataset.destination;
+                destinationInput.value = destinationName;
+                document.getElementById('flight_search_form').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+
+        const searchForm = document.querySelector('form');
+        searchForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const departure = document.getElementById('departure').value;
+            const destination = document.getElementById('destination').value;
+            const departDate = document.getElementById('depart_date').value;
+            const returnDate = document.getElementById('return_date').value;
+            const flightType = document.querySelector('input[name="flight_type"]:checked').value;
+
+            if (!departure || !destination || !departDate) {
+                showCustomAlert("Vui lòng điền đầy đủ thông tin Điểm đi, Điểm đến và Ngày đi.");
+                return;
+            }
+            if (flightType === 'round_trip' && !returnDate) {
+                showCustomAlert("Vui lòng chọn Ngày về cho chuyến bay khứ hồi.");
+                return;
+            }
+
+            searchButtonText.classList.add('hidden');
+            searchSpinner.classList.remove('hidden');
+            searchFlightBtn.disabled = true;
+            searchFlightBtn.classList.add('cursor-not-allowed', 'opacity-75');
+
+            oneWayFlightList.innerHTML = '';
+            outboundFlightsList.innerHTML = '';
+            returnFlightsList.innerHTML = '';
+            noFlightsMessage.classList.add('hidden');
+            roundTripSelectionMessage.classList.add('hidden');
+            confirmRoundTripSelectionBtn.classList.add('hidden');
+            tempSelectedOutboundFlight = null;
+            tempSelectedReturnFlight = null;
+
+            setTimeout(() => {
+                let summary = `Điểm đi: ${departure} - Điểm đến: ${destination}<br>`;
+                summary += `Ngày đi: ${departDate}`;
+                if (flightType === 'round_trip') {
+                    summary += ` - Ngày về: ${returnDate}`;
+                }
+                summary += `<br>Hành khách: ${adultPassengers} NL, ${childPassengers} TE, ${infantPassengers} SS`;
+                searchSummary.innerHTML = summary;
+
+                const passengersForPricing = adultPassengers + childPassengers;
+                const basePricePerTicket = getAirportBasePrice(departure);
+
+                if (flightType === 'one_way') {
+                    roundTripFlightsSection.classList.add('hidden');
+                    oneWayFlightList.classList.remove('hidden');
+
+                    const simulatedOneWayFlights = [
+                        { id: 'VJ123', airline: 'Vietjet Air', departTime: '07:00', arriveTime: '09:00', rawPrice: basePricePerTicket, duration: '2h00m', flightDate: departDate, flightTime: '07:00' },
+                        { id: 'VJ456', airline: 'Vietjet Air', departTime: '10:30', arriveTime: '12:30', rawPrice: basePricePerTicket + 250000, duration: '2h00m', flightDate: departDate, flightTime: '10:30' },
+                        { id: 'VJ789', airline: 'Vietjet Air', departTime: '14:00', arriveTime: '16:00', rawPrice: basePricePerTicket - 150000, duration: '2h00m', flightDate: departDate, flightTime: '14:00' }
+                    ];
+
+                    if (simulatedOneWayFlights.length > 0) {
+                        simulatedOneWayFlights.forEach(flight => {
+                            const promotionDiscount = getPromotionDiscount(destination.split(' ')[0]);
+                            const originalTotalPrice = flight.rawPrice * passengersForPricing;
+                            const finalTotalPrice = originalTotalPrice * (1 - promotionDiscount / 100);
+
+                            const flightCard = document.createElement('div');
+                            flightCard.className = 'flight-card bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row justify-between items-center transition duration-300 hover:shadow-lg';
+                            flightCard.innerHTML = `
+                                <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                                    <img src="https://placehold.co/50x50/FF0000/FFFFFF?text=VJ" alt="Vietjet Logo" class="h-12 w-12 rounded-full">
+                                    <div>
+                                        <p class="text-xl font-bold text-gray-900">${flight.id}</p>
+                                        <p class="text-sm text-gray-600">${flight.airline}</p>
+                                    </div>
+                                </div>
+                                <div class="text-center md:text-left mb-4 md:mb-0">
+                                    <p class="text-lg font-semibold">${flight.departTime} - ${flight.arriveTime}</p>
+                                    <p class="text-sm text-gray-500">Thời gian bay: ${flight.duration}</p>
+                                </div>
+                                <div class="text-center md:text-right">
+                                    ${promotionDiscount > 0 ? `<p class="text-base text-gray-500 line-through">${originalTotalPrice.toLocaleString('vi-VN')} VNĐ</p>` : ''}
+                                    <p class="text-2xl font-bold text-red-600 mb-2">${finalTotalPrice.toLocaleString('vi-VN')} VNĐ</p>
+                                    ${promotionDiscount > 0 ? `<p class="text-sm text-green-600 font-semibold">Giảm ${promotionDiscount}%</p>` : ''}
+                                    <button class="select-flight-btn bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300 transform hover:scale-105 active:scale-95"
+                                            data-flight-type="one_way"
+                                            data-flight-id="${flight.id}"
+                                            data-original-price="${originalTotalPrice}"
+                                            data-final-price="${finalTotalPrice}"
+                                            data-flight-depart-time="${flight.departTime}"
+                                            data-flight-arrive-time="${flight.arriveTime}"
+                                            data-flight-date="${flight.flightDate}"
+                                            data-flight-time="${flight.departTime}">
+                                        Chọn chuyến bay
+                                    </button>
+                                </div>
+                            `;
+                            oneWayFlightList.appendChild(flightCard);
+                        });
+                        document.querySelectorAll('#one_way_flight_list .select-flight-btn').forEach(button => {
+                            button.addEventListener('click', function() {
+                                document.querySelectorAll('#one_way_flight_list .flight-card').forEach(card => card.classList.remove('selected-flight'));
+                                this.closest('.flight-card').classList.add('selected-flight');
+
+                                currentSelectedFlight = {
+                                    type: 'one_way',
+                                    id: this.dataset.flightId,
+                                    originalPrice: parseFloat(this.dataset.originalPrice),
+                                    finalPrice: parseFloat(this.dataset.finalPrice),
+                                    departTime: this.dataset.flightDepartTime,
+                                    arriveTime: this.dataset.flightArriveTime,
+                                    flightDate: this.dataset.flightDate,
+                                    flightTime: this.dataset.flightTime,
+                                    seat: 'N/A'
+                                };
+                                hideModal(flightResultsModal);
+                                showSeatSelectionModal(currentSelectedFlight);
+                            });
+                        });
+                    } else {
+                        noFlightsMessage.classList.remove('hidden');
+                        noFlightsMessage.innerText = "Không tìm thấy chuyến bay nào phù hợp.";
+                    }
+
+                } else {
+                    oneWayFlightList.classList.add('hidden');
+                    roundTripFlightsSection.classList.remove('hidden');
+                    roundTripSelectionMessage.classList.remove('hidden');
+
+                    const simulatedOutboundFlights = [
+                        { id: 'VJ123', airline: 'Vietjet Air', departTime: '07:00', arriveTime: '09:00', rawPrice: basePricePerTicket, duration: '2h00m', flightDate: departDate, flightTime: '07:00' },
+                        { id: 'VJ456', airline: 'Vietjet Air', departTime: '10:30', arriveTime: '12:30', rawPrice: basePricePerTicket + 200000, duration: '2h00m', flightDate: departDate, flightTime: '10:30' }
+                    ];
+                    const simulatedReturnFlights = [
+                        { id: 'VJ124', airline: 'Vietjet Air', departTime: '18:00', arriveTime: '20:00', rawPrice: basePricePerTicket - 50000, duration: '2h00m', flightDate: returnDate, flightTime: '18:00' },
+                        { id: 'VJ457', airline: 'Vietjet Air', departTime: '20:00', arriveTime: '22:00', rawPrice: basePricePerTicket + 50000, duration: '2h00m', flightDate: returnDate, flightTime: '20:00' }
+                    ];
+
+                    if (simulatedOutboundFlights.length > 0) {
+                        simulatedOutboundFlights.forEach(flight => {
+                            const totalPrice = flight.rawPrice * passengersForPricing;
+                            const flightCard = document.createElement('div');
+                            flightCard.className = 'flight-card bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row justify-between items-center transition duration-300 hover:shadow-lg';
+                            flightCard.innerHTML = `
+                                <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                                    <img src="https://placehold.co/50x50/FF0000/FFFFFF?text=VJ" alt="Vietjet Logo" class="h-12 w-12 rounded-full">
+                                    <div>
+                                        <p class="text-xl font-bold text-gray-900">${flight.id}</p>
+                                        <p class="text-sm text-gray-600">${flight.airline}</p>
+                                    </div>
+                                </div>
+                                <div class="text-center md:text-left mb-4 md:mb-0">
+                                    <p class="text-lg font-semibold">${flight.departTime} - ${flight.arriveTime}</p>
+                                    <p class="text-sm text-gray-500">Thời gian bay: ${flight.duration}</p>
+                                </div>
+                                <div class="text-center md:text-right">
+                                    <p class="text-2xl font-bold text-red-600 mb-2">${totalPrice.toLocaleString('vi-VN')} VNĐ</p>
+                                    <button class="select-segment-btn bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300 transform hover:scale-105 active:scale-95"
+                                            data-segment-type="outbound"
+                                            data-flight-id="${flight.id}"
+                                            data-flight-price="${totalPrice}"
+                                            data-flight-depart-time="${flight.departTime}"
+                                            data-flight-arrive-time="${flight.arriveTime}"
+                                            data-flight-date="${flight.flightDate}"
+                                            data-flight-time="${flight.departTime}">
+                                        Chọn chuyến đi
+                                    </button>
+                                </div>
+                            `;
+                            outboundFlightsList.appendChild(flightCard);
+                        });
+                    } else {
+                        outboundFlightsList.innerHTML = '<p class="text-center text-gray-600">Không tìm thấy chuyến đi nào phù hợp.</p>';
+                    }
+
+                    if (simulatedReturnFlights.length > 0) {
+                        simulatedReturnFlights.forEach(flight => {
+                            const totalPrice = flight.rawPrice * passengersForPricing;
+                            const flightCard = document.createElement('div');
+                            flightCard.className = 'flight-card bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row justify-between items-center transition duration-300 hover:shadow-lg';
+                            flightCard.innerHTML = `
+                                <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                                    <img src="https://placehold.co/50x50/FF0000/FFFFFF?text=VJ" alt="Vietjet Logo" class="h-12 w-12 rounded-full">
+                                    <div>
+                                        <p class="text-xl font-bold text-gray-900">${flight.id}</p>
+                                        <p class="text-sm text-gray-600">${flight.airline}</p>
+                                    </div>
+                                </div>
+                                <div class="text-center md:text-left mb-4 md:mb-0">
+                                    <p class="text-lg font-semibold">${flight.departTime} - ${flight.arriveTime}</p>
+                                    <p class="text-sm text-gray-500">Thời gian bay: ${flight.duration}</p>
+                                </div>
+                                <div class="text-center md:text-right">
+                                    <p class="text-2xl font-bold text-red-600 mb-2">${totalPrice.toLocaleString('vi-VN')} VNĐ</p>
+                                    <button class="select-segment-btn bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300 transform hover:scale-105 active:scale-95"
+                                            data-segment-type="return"
+                                            data-flight-id="${flight.id}"
+                                            data-flight-price="${totalPrice}"
+                                            data-flight-depart-time="${flight.departTime}"
+                                            data-flight-arrive-time="${flight.arriveTime}"
+                                            data-flight-date="${flight.flightDate}"
+                                            data-flight-time="${flight.departTime}">
+                                        Chọn chuyến về
+                                    </button>
+                                </div>
+                            `;
+                            returnFlightsList.appendChild(flightCard);
+                        });
+                    } else {
+                        returnFlightsList.innerHTML = '<p class="text-center text-gray-600">Không tìm thấy chuyến về nào phù hợp.</p>';
+                    }
+
+                    document.querySelectorAll('.select-segment-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const segmentType = this.dataset.segmentType;
+                            const flightData = {
+                                id: this.dataset.flightId,
+                                price: parseFloat(this.dataset.flightPrice),
+                                departTime: this.dataset.flightDepartTime,
+                                arriveTime: this.dataset.flightArriveTime,
+                                flightDate: this.dataset.flightDate,
+                                flightTime: this.dataset.flightTime,
+                                seat: 'N/A'
+                            };
+
+                            document.querySelectorAll(`#${segmentType}_flights_list .flight-card`).forEach(card => card.classList.remove('selected-flight'));
+                            this.closest('.flight-card').classList.add('selected-flight');
+
+                            if (segmentType === 'outbound') {
+                                tempSelectedOutboundFlight = flightData;
+                            } else {
+                                tempSelectedReturnFlight = flightData;
+                            }
+                            checkRoundTripSelectionComplete();
+                        });
+                    });
+                }
+
+                showModal(flightResultsModal);
+
+                searchButtonText.classList.remove('hidden');
+                searchSpinner.classList.add('hidden');
+                searchFlightBtn.disabled = false;
+                searchFlightBtn.classList.remove('cursor-not-allowed', 'opacity-75');
+            }, 1500);
+        });
+
+        function checkRoundTripSelectionComplete() {
+            if (tempSelectedOutboundFlight && tempSelectedReturnFlight) {
+                roundTripSelectionMessage.classList.add('hidden');
+                confirmRoundTripSelectionBtn.classList.remove('hidden');
+            } else {
+                roundTripSelectionMessage.classList.remove('hidden');
+                confirmRoundTripSelectionBtn.classList.add('hidden');
+            }
+        }
+
+        confirmRoundTripSelectionBtn.addEventListener('click', function() {
+            if (tempSelectedOutboundFlight && tempSelectedReturnFlight) {
+                const outboundPromoDiscount = getPromotionDiscount(document.getElementById('destination').value.split(' ')[0]);
+                const returnPromoDiscount = getPromotionDiscount(document.getElementById('departure').value.split(' ')[0]);
+
+                const outboundPriceAfterPromo = tempSelectedOutboundFlight.price * (1 - outboundPromoDiscount / 100);
+                const returnPriceAfterPromo = tempSelectedReturnFlight.price * (1 - returnPromoDiscount / 100);
+
+                const originalCombinedPrice = outboundPriceAfterPromo + returnPriceAfterPromo;
+                const discountedCombinedPrice = originalCombinedPrice * 0.8;
+
+                currentSelectedFlight = {
+                    type: 'round_trip',
+                    outbound: { ...tempSelectedOutboundFlight, finalPrice: outboundPriceAfterPromo },
+                    return: { ...tempSelectedReturnFlight, finalPrice: returnPriceAfterPromo },
+                    originalTotalPrice: originalCombinedPrice,
+                    finalPrice: discountedCombinedPrice,
+                    totalPriceFormatted: `${discountedCombinedPrice.toLocaleString('vi-VN')} VNĐ`,
+                    originalTotalPriceFormatted: `${originalCombinedPrice.toLocaleString('vi-VN')} VNĐ`
+                };
+                hideModal(flightResultsModal);
+                showSeatSelectionModal(currentSelectedFlight);
+            } else {
+                showCustomAlert("Vui lòng chọn cả chuyến đi và chuyến về.");
+            }
+        });
+
+
+        closeResultsModalBtn.addEventListener('click', function() {
+            hideModal(flightResultsModal);
+        });
+
+        function showPaymentModal(flight) {
+            originalPriceDisplay.classList.add('hidden');
+            voucherCodeInput.value = '';
+            voucherMessage.classList.add('hidden');
+            qrPaymentDetails.classList.add('hidden');
+            proceedToPaymentBtn.classList.remove('hidden');
+
+            let displayPrice = 0;
+            let displayOriginalPrice = 0;
+            let flightDetailsText = '';
+
+            if (flight.type === 'one_way') {
+                displayPrice = flight.finalPrice;
+                displayOriginalPrice = flight.originalPrice;
+                flightDetailsText = `${flight.id} (${flight.departTime} - ${flight.arriveTime})`;
+            } else {
+                displayPrice = flight.finalPrice;
+                displayOriginalPrice = flight.originalTotalPrice;
+                flightDetailsText = `${flight.outbound.id} (Đi) & ${flight.return.id} (Về)`;
+            }
+
+            selectedFlightInfo.innerText = flightDetailsText;
+            originalPriceValue.innerText = `${displayOriginalPrice.toLocaleString('vi-VN')} VNĐ`;
+            finalPriceValue.innerText = `${displayPrice.toLocaleString('vi-VN')} VNĐ`;
+            paymentAmountDisplay.innerText = `${displayPrice.toLocaleString('vi-VN')} VNĐ`;
+
+            if (displayPrice < displayOriginalPrice) {
+                originalPriceDisplay.classList.remove('hidden');
+            } else {
+                originalPriceDisplay.classList.add('hidden');
+            }
+
+            showModal(paymentModal);
+        }
+
+        applyVoucherBtn.addEventListener('click', function() {
+            const voucherCode = voucherCodeInput.value.trim().toUpperCase();
+            let currentTotalFlightPrice = currentSelectedFlight.finalPrice;
+
+            let discountedPrice = currentTotalFlightPrice;
+            let message = '';
+            let isVoucherValid = false;
+
+            const voucher = vouchersDataCache.find(v => v.code === voucherCode);
+
+            if (voucher) {
+                if (voucher.type === 'fixed') {
+                    discountedPrice = currentTotalFlightPrice - voucher.discount;
+                    message = `Áp dụng mã giảm giá thành công! Giảm ${voucher.discount.toLocaleString('vi-VN')} VNĐ.`;
+                } else if (voucher.type === 'percentage') {
+                    discountedPrice = currentTotalFlightPrice * (1 - voucher.discount);
+                    message = `Áp dụng mã giảm giá thành công! Giảm ${voucher.discount * 100}%.`;
+                }
+                if (discountedPrice < 0) discountedPrice = 0;
+                voucherMessage.classList.remove('text-red-500');
+                voucherMessage.classList.add('text-green-600');
+                isVoucherValid = true;
+            } else {
+                message = 'Mã giảm giá không hợp lệ hoặc đã hết hạn.';
+                voucherMessage.classList.remove('text-green-600');
+                voucherMessage.classList.add('text-red-500');
+            }
+
+            if (isVoucherValid) {
+                originalPriceDisplay.classList.remove('hidden');
+                originalPriceValue.innerText = `${currentTotalFlightPrice.toLocaleString('vi-VN')} VNĐ`;
+                finalPriceValue.innerText = `${discountedPrice.toLocaleString('vi-VN')} VNĐ`;
+                paymentAmountDisplay.innerText = `${discountedPrice.toLocaleString('vi-VN')} VNĐ`;
+            } else {
+                originalPriceDisplay.classList.add('hidden');
+                finalPriceValue.innerText = `${currentTotalFlightPrice.toLocaleString('vi-VN')} VNĐ`;
+                paymentAmountDisplay.innerText = `${currentTotalFlightPrice.toLocaleString('vi-VN')} VNĐ`;
+            }
+            voucherMessage.innerText = message;
+            voucherMessage.classList.remove('hidden');
+        });
+
+        function generateRandomAlphanumeric(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+
+        proceedToPaymentBtn.addEventListener('click', function() {
+            proceedToPaymentBtn.classList.add('hidden');
+            qrPaymentDetails.classList.remove('hidden');
+
+            bankNameDisplay.innerText = paymentDetailsCache.bankName || 'Chưa cập nhật';
+            accountHolderDisplay.innerText = paymentDetailsCache.accountHolder || 'Chưa cập nhật';
+            accountNumberDisplay.innerText = paymentDetailsCache.accountNumber || 'Chưa cập nhật';
+            qrCodeImg.src = paymentDetailsCache.qrCodeUrl || 'https://placehold.co/200x200/000000/FFFFFF?text=QR+Code';
+
+            const randomCode = generateRandomAlphanumeric(6);
+            transferContent.innerText = randomCode;
+        });
+
+        confirmPaymentBtn.addEventListener('click', function() {
+            hideModal(paymentModal);
+            showModal(uploadProofModal);
+        });
+
+        uploadProofConfirmBtn.addEventListener('click', async function() {
+            const file = paymentProofInput.files[0];
+            if (file) {
+                showCustomAlert(`Đã tải lên ảnh "${file.name}".\nThời gian xử lý giao dịch khoảng 15-20 phút.`);
+                hideModal(uploadProofModal);
+
+                let bookingId = 'BK' + Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+                let flightInfo = '';
+                let price = finalPriceValue.innerText;
+                let selectedSeatsDisplay = '';
+
+                if (currentSelectedFlight.type === 'one_way') {
+                    flightInfo = `${currentSelectedFlight.id} ${document.getElementById('departure').value}-${document.getElementById('destination').value} (${currentSelectedFlight.departTime} - ${currentSelectedFlight.arriveTime})`;
+                    selectedSeatsDisplay = selectedOutboundSeats.join(', ');
+                } else {
+                    flightInfo = `${currentSelectedFlight.outbound.id} ${document.getElementById('departure').value}-${document.getElementById('destination').value} (Đi) & ${currentSelectedFlight.return.id} ${document.getElementById('destination').value}-${document.getElementById('departure').value} (Về)`;
+                    selectedSeatsDisplay = `Đi: ${selectedOutboundSeats.join(', ')} | Về: ${selectedReturnSeats.join(', ')}`;
+                }
+
+                const newBooking = {
+                    id: bookingId,
+                    flightInfo: flightInfo,
+                    price: price,
+                    status: 'Đang xử lý',
+                    bookingDate: formatDate(new Date()),
+                    username: loggedInUser ? loggedInUser.username : 'Guest',
+                    creatorId: auth.currentUser ? auth.currentUser.uid : 'anonymous',
+                    seats: selectedSeatsDisplay
+                };
+
+                try {
+                    // Save to allBookingHistory collection (public)
+                    await addDoc(collection(db, `artifacts/${appId}/public/data/allBookingHistory`), newBooking);
+
+                    // Save to user's private booking history if logged in
+                    if (loggedInUser && !loggedInUser.isAdmin) {
+                        await addDoc(collection(db, `artifacts/${appId}/users/${currentUserId}/bookings`), newBooking);
+                    }
+                } catch (error) {
+                    showCustomAlert("Lỗi khi lưu thông tin đặt vé: " + error.message);
+                }
+
+                paymentProofInput.value = '';
+            } else {
+                showCustomAlert('Vui lòng chọn một ảnh để tải lên để giảm thời gian xử lý.');
+            }
+        });
+
+        closeUploadProofModalBtn.addEventListener('click', function() {
+            hideModal(uploadProofModal);
+        });
+
+        closePaymentModalBtn.addEventListener('click', function() {
+            hideModal(paymentModal);
+        });
+
+        const seatLayoutConfig = {
+            rows: 10,
+            cols: ['A', 'B', 'C', 'D', 'E', 'F'],
+            occupiedSeats: [
+                { row: 1, col: 'A' }, { row: 1, col: 'B' },
+                { row: 3, col: 'D' }, { row: 4, col: 'F' },
+                { row: 7, col: 'C' }, { row: 8, col: 'E' }
+            ]
+        };
+
+        function renderSeatMap(containerElement, flightType, selectedSeatsArray, neededSeats) {
+            containerElement.innerHTML = '';
+            const fragment = document.createDocumentFragment();
+
+            const colLabelsRow = document.createElement('div');
+            colLabelsRow.className = 'contents';
+            const emptyCell = document.createElement('div');
+            emptyCell.className = 'w-10 h-10';
+            colLabelsRow.appendChild(emptyCell);
+            seatLayoutConfig.cols.forEach(col => {
+                const colLabel = document.createElement('div');
+                colLabel.className = 'w-10 h-10 flex items-center justify-center font-bold text-gray-600';
+                colLabel.innerText = col;
+                colLabelsRow.appendChild(colLabel);
+            });
+            fragment.appendChild(colLabelsRow);
+
+
+            for (let r = 1; r <= seatLayoutConfig.rows; r++) {
+                const rowNumber = document.createElement('div');
+                rowNumber.className = 'w-10 h-10 flex items-center justify-center font-bold text-gray-600';
+                rowNumber.innerText = r;
+                fragment.appendChild(rowNumber);
+
+                seatLayoutConfig.cols.forEach(col => {
+                    const seatId = `${r}${col}`;
+                    const isOccupied = seatLayoutConfig.occupiedSeats.some(
+                        s => s.row === r && s.col === col
+                    );
+                    const isSelected = selectedSeatsArray.includes(seatId);
+
+                    const seatDiv = document.createElement('div');
+                    seatDiv.className = `seat ${isOccupied ? 'occupied' : 'available'} ${isSelected ? 'selected' : ''}`;
+                    seatDiv.innerText = col;
+                    seatDiv.dataset.seatId = seatId;
+                    seatDiv.dataset.flightType = flightType;
+
+                    if (!isOccupied) {
+                        seatDiv.addEventListener('click', function() {
+                            toggleSeatSelection(this, selectedSeatsArray, neededSeats, containerElement.id === 'outbound_seat_map' ? outboundSelectedCountSpan : returnSelectedCountSpan);
+                        });
+                    }
+                    fragment.appendChild(seatDiv);
+                });
+            }
+            containerElement.appendChild(fragment);
+        }
+
+        function toggleSeatSelection(seatElement, selectedSeatsArray, neededSeats, countSpan) {
+            const seatId = seatElement.dataset.seatId;
+
+            if (seatElement.classList.contains('selected')) {
+                seatElement.classList.remove('selected');
+                const index = selectedSeatsArray.indexOf(seatId);
+                if (index > -1) {
+                    selectedSeatsArray.splice(index, 1);
+                }
+            } else {
+                if (!seatElement.classList.contains('occupied') && selectedSeatsArray.length < neededSeats) {
+                    seatElement.classList.add('selected');
+                    selectedSeatsArray.push(seatId);
+                } else if (selectedSeatsArray.length >= neededSeats) {
+                    showCustomAlert(`Bạn chỉ có thể chọn tối đa ${neededSeats} ghế.`);
+                }
+            }
+            countSpan.innerText = selectedSeatsArray.length;
+        }
+
+        function showSeatSelectionModal(flight) {
+            const neededSeats = adultPassengers + childPassengers;
+            outboundNeededSeatsSpan.innerText = neededSeats;
+            returnNeededSeatsSpan.innerText = neededSeats;
+
+            selectedOutboundSeats = [];
+            selectedReturnSeats = [];
+
+            if (flight.type === 'one_way') {
+                outboundFlightDetails.innerText = `${flight.id} (${flight.departTime} - ${flight.arriveTime})`;
+                returnSeatMapSection.classList.add('hidden');
+                renderSeatMap(outboundSeatMap, 'outbound', selectedOutboundSeats, neededSeats);
+                outboundSelectedCountSpan.innerText = selectedOutboundSeats.length;
+            } else {
+                outboundFlightDetails.innerText = `${flight.outbound.id} (${flight.outbound.departTime} - ${flight.outbound.arriveTime})`;
+                returnFlightDetails.innerText = `${flight.return.id} (${flight.return.departTime} - ${flight.return.arriveTime})`;
+                returnSeatMapSection.classList.remove('hidden');
+                renderSeatMap(outboundSeatMap, 'outbound', selectedOutboundSeats, neededSeats);
+                renderSeatMap(returnSeatMap, 'return', selectedReturnSeats, neededSeats);
+                outboundSelectedCountSpan.innerText = selectedOutboundSeats.length;
+                returnSelectedCountSpan.innerText = selectedReturnSeats.length;
+            }
+            showModal(seatSelectionModal);
+        }
+
+        confirmSeatSelectionBtn.addEventListener('click', function() {
+            const neededSeats = adultPassengers + childPassengers;
+            let allSeatsSelected = false;
+
+            if (currentSelectedFlight.type === 'one_way') {
+                if (selectedOutboundSeats.length === neededSeats) {
+                    allSeatsSelected = true;
+                    currentSelectedFlight.seat = selectedOutboundSeats.join(',');
+                } else {
+                    showCustomAlert(`Vui lòng chọn đủ ${neededSeats} ghế cho chuyến đi.`);
+                }
+            } else {
+                if (selectedOutboundSeats.length === neededSeats && selectedReturnSeats.length === neededSeats) {
+                    allSeatsSelected = true;
+                    currentSelectedFlight.outbound.seat = selectedOutboundSeats.join(',');
+                    currentSelectedFlight.return.seat = selectedReturnSeats.join(',');
+                } else {
+                    showCustomAlert(`Vui lòng chọn đủ ${neededSeats} ghế cho cả chuyến đi và chuyến về.`);
+                }
+            }
+
+            if (allSeatsSelected) {
+                hideModal(seatSelectionModal);
+                showPaymentModal(currentSelectedFlight);
+            }
+        });
+
+        closeSeatSelectionModalBtn.addEventListener('click', function() {
+            hideModal(seatSelectionModal);
+        });
+
+
+        historyNavLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (!loggedInUser) {
+                showCustomAlert("Vui lòng đăng nhập để xem lịch sử đặt vé.");
+                return;
+            }
+            renderBookingHistory();
+            showModal(historyModal);
+        });
+
+        closeHistoryModalBtn.addEventListener('click', function() {
+            hideModal(historyModal);
+        });
+
+        function renderBookingHistory() {
+            bookingHistoryList.innerHTML = '';
+            const historyToDisplay = loggedInUser && !loggedInUser.isAdmin && loggedInUser.history ? loggedInUser.history : [];
+
+            if (historyToDisplay.length === 0) {
+                noHistoryMessage.classList.remove('hidden');
+            } else {
+                noHistoryMessage.classList.add('hidden');
+                historyToDisplay.forEach(booking => {
+                    const bookingCard = document.createElement('div');
+                    bookingCard.className = 'bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row justify-between items-center transition duration-300 hover:shadow-lg';
+                    let statusColor = '';
+                    if (booking.status === 'Đang xử lý') {
+                        statusColor = 'text-yellow-600';
+                    } else if (booking.status === 'Đặt vé thành công') {
+                        statusColor = 'text-green-600';
+                    } else if (booking.status === 'Đã hoàn thành') {
+                        statusColor = 'text-blue-600';
+                    }
+                    bookingCard.innerHTML = `
+                        <div class="flex-grow mb-2 md:mb-0">
+                            <p class="text-lg font-bold text-gray-900">Mã đặt chỗ: ${booking.id}</p>
+                            <p class="text-sm text-gray-700">${booking.flightInfo}</p>
+                            <p class="text-sm text-gray-700">Ngày đặt: ${booking.bookingDate}</p>
+                            <p class="text-sm text-gray-700">Ghế đã chọn: ${booking.seats || 'N/A'}</p>
+                        </div>
+                        <div class="text-center md:text-right">
+                            <p class="text-xl font-bold text-red-600 mb-1">${booking.price}</p>
+                            <p class="text-base font-semibold ${statusColor}">Trạng thái: ${booking.status}</p>
+                        </div>
+                    `;
+                    bookingHistoryList.appendChild(bookingCard);
+                });
+            }
+        }
+
+        promotionsNavLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            renderPromotions();
+            showModal(promotionsModal);
+        });
+
+        closePromotionsModalBtn.addEventListener('click', function() {
+            hideModal(promotionsModal);
+        });
+
+        function renderPromotions() {
+            promotionsList.innerHTML = '';
+            if (promotionsDataCache.length === 0) {
+                promotionsList.innerHTML = '<p class="text-center text-gray-600">Hiện chưa có khuyến mại nào.</p>';
+                return;
+            }
+            promotionsDataCache.forEach(promo => {
+                const card = document.createElement('div');
+                card.className = 'promotion-card bg-white rounded-xl shadow-lg overflow-hidden';
+                card.innerHTML = `
+                    <img src="${promo.image}" alt="${promo.destination}" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <h4 class="text-xl font-bold text-gray-900 mb-2">${promo.destination}</h4>
+                        <p class="text-gray-600 text-sm mb-3">${promo.description}</p>
+                        <p class="text-green-600 text-xl font-semibold mt-1">Giảm giá ${promo.discountPercent}%</p>
+                        <button class="mt-4 w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300">
+                            Đặt ngay
+                        </button>
+                    </div>
+                `;
+                promotionsList.appendChild(card);
+            });
+        }
+
+        function renderPopularDestinations() {
+            popularDestinationsList.innerHTML = '';
+            const popularAirportNames = ["Phú Quốc (PQC)", "Đà Nẵng (DAD)", "Đà Lạt (DLI)", "Hà Nội (HAN)", "TP. Hồ Chí Minh (SGN)"];
+            const popularDestinations = domesticAirportsDataCache.filter(airport => popularAirportNames.includes(airport.name));
+
+            if (popularDestinations.length === 0) {
+                popularDestinationsList.innerHTML = '<p class="text-center text-gray-600">Hiện chưa có điểm đến nổi bật nào.</p>';
+                return;
+            }
+
+            popularDestinations.forEach(dest => {
+                const promo = promotionsDataCache.find(p => p.destination === dest.name.split(' ')[0]);
+                const discountText = promo ? `Giảm ${promo.discountPercent}%` : 'Giá tốt';
+                const descriptionText = dest.description || 'Khám phá điểm đến hấp dẫn với nhiều trải nghiệm thú vị.';
+
+                const card = document.createElement('div');
+                card.className = 'bg-white bg-opacity-75 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden'; // Added bg-opacity-75
+                card.innerHTML = `
+                    <img src="${dest.image}" alt="${dest.name}" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-gray-900">${dest.name}</h3>
+                        <p class="text-gray-600 mb-4">${descriptionText}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-red-600 font-bold text-2xl">${discountText}</span>
+                            <button class="btn-dat-ngay bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300 transform hover:scale-105 active:scale-95" data-destination="${dest.name}">
+                                Đặt ngay
+                            </button>
+                        </div>
+                    </div>
+                `;
+                popularDestinationsList.appendChild(card);
+            });
+        }
+
+
+        contactNavLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showModal(contactModal);
+        });
+
+        closeContactModalBtn.addEventListener('click', function() {
+            hideModal(contactModal);
+        });
+
+        messageNowBtn.addEventListener('click', function() {
+            hideModal(contactModal);
+            showChatModalForUser();
+        });
+
+        floatingAdIconContainer.addEventListener('click', function() {
+            showChatModalForUser();
+        });
+
+        closeChatModalBtn.addEventListener('click', function() {
+            hideModal(chatModal);
+        });
+
+        chatSendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        chatAttachBtn.addEventListener('click', function() {
+            chatFileInput.click();
+        });
+
+        chatFileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'flex justify-end';
+                let fileDisplay = '';
+                if (file.type.startsWith('image/')) {
+                    const imgUrl = URL.createObjectURL(file);
+                    fileDisplay = `<img src="${imgUrl}" class="max-w-[150px] max-h-[150px] rounded-lg mb-1" onload="URL.revokeObjectURL(this.src);">`;
+                } else {
+                    fileDisplay = `<p class="font-semibold">Tệp: ${file.name}</p>`;
+                }
+                messageDiv.innerHTML = `
+                    <div class="bg-green-100 text-green-800 p-3 rounded-lg max-w-[70%] shadow-sm">
+                        ${fileDisplay}
+                        <p class="text-sm text-gray-600 mt-1">Đã gửi tệp đính kèm.</p>
+                    </div>
+                `;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                this.value = '';
+            }
+        });
+
+        async function showChatModalForUser() {
+            if (!loggedInUser) {
+                showCustomAlert("Vui lòng đăng nhập để bắt đầu trò chuyện.");
+                return;
+            }
+
+            chatMessages.innerHTML = '';
+            chatSenderName.innerText = loggedInUser.username;
+
+            let userChat = chatSessionsCache.find(chat => chat.userId === loggedInUser.username);
+
+            if (!userChat) {
+                userChat = {
+                    userId: loggedInUser.username,
+                    username: loggedInUser.fullname || loggedInUser.username,
+                    messages: [{ sender: 'admin', text: 'Chào mừng bạn đến với Vietjet Air! Chúng tôi có thể giúp gì cho bạn?', timestamp: new Date().toISOString() }],
+                    userLastReadTimestamp: new Date().toISOString() // Set initial read timestamp
+                };
+                try {
+                    await setDoc(doc(db, `artifacts/${appId}/public/data/chats`, loggedInUser.username), userChat);
+                } catch (error) {
+                    showCustomAlert("Lỗi khi tạo phiên trò chuyện mới: " + error.message);
+                    return;
+                }
+            } else {
+                // Update userLastReadTimestamp when chat is opened
+                try {
+                    await updateDoc(doc(db, `artifacts/${appId}/public/data/chats`, loggedInUser.username), {
+                        userLastReadTimestamp: new Date().toISOString()
+                    });
+                } catch (error) {
+                    console.error("Error updating userLastReadTimestamp:", error);
+                }
+            }
+            renderChatMessages(userChat.messages);
+            showModal(chatModal);
+        }
+
+        async function sendMessage() {
+            const messageText = chatInput.value.trim();
+            if (messageText && loggedInUser) {
+                const userChatRef = doc(db, `artifacts/${appId}/public/data/chats`, loggedInUser.username);
+                const newMessage = {
+                    sender: 'user',
+                    text: messageText,
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    const chatSnap = await getDoc(userChatRef);
+                    let messages = [];
+                    if (chatSnap.exists()) {
+                        messages = chatSnap.data().messages || [];
+                    }
+                    messages.push(newMessage);
+                    await updateDoc(userChatRef, { messages: messages, userLastReadTimestamp: new Date().toISOString() }); // Mark as read when user sends
+                    chatInput.value = '';
+                } catch (error) {
+                    showCustomAlert("Lỗi khi gửi tin nhắn: " + error.message);
+                }
+            }
+        }
+
+        function renderChatMessages(messages) {
+            chatMessages.innerHTML = '';
+            messages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`;
+                messageDiv.innerHTML = `
+                    <div class="${msg.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'} p-3 rounded-lg max-w-[70%] shadow-md">
+                        ${msg.text}
+                    </div>
+                `;
+                chatMessages.appendChild(messageDiv);
+            });
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function renderUnreadCount() {
+            if (!loggedInUser || loggedInUser.isAdmin) {
+                unreadCountBadge.classList.add('hidden');
+                return;
+            }
+
+            const userChat = chatSessionsCache.find(chat => chat.userId === loggedInUser.username);
+            if (!userChat || !userChat.messages) {
+                unreadCountBadge.classList.add('hidden');
+                return;
+            }
+
+            const lastReadTimestamp = userChat.userLastReadTimestamp ? new Date(userChat.userLastReadTimestamp) : new Date(0);
+            let unreadCount = 0;
+            userChat.messages.forEach(msg => {
+                if (msg.sender === 'admin' && new Date(msg.timestamp) > lastReadTimestamp) {
+                    unreadCount++;
+                }
+            });
+
+            if (unreadCount > 0) {
+                unreadCountBadge.innerText = unreadCount;
+                unreadCountBadge.classList.remove('hidden');
+            } else {
+                unreadCountBadge.classList.add('hidden');
+            }
+        }
+
+        adminSettingsNavLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (!loggedInUser || !loggedInUser.isAdmin) {
+                showCustomAlert("Bạn không có quyền truy cập trang này.");
+                return;
+            }
+            showModal(adminSettingsModal);
+            showAdminTab('promotions');
+        });
+
+        closeAdminSettingsModalBtn.addEventListener('click', function() {
+            hideModal(adminSettingsModal);
+        });
+
+        adminTabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const tab = this.dataset.tab;
+                showAdminTab(tab);
+            });
+        });
+
+        function showAdminTab(tabName) {
+            document.querySelectorAll('.admin-tab-content').forEach(tabContent => {
+                tabContent.classList.add('hidden');
+            });
+            document.querySelectorAll('.admin-tab-btn').forEach(tabBtn => {
+                tabBtn.classList.remove('border-blue-500', 'text-blue-600');
+                tabBtn.classList.add('border-transparent', 'text-gray-700');
+            });
+
+            document.getElementById(`admin_${tabName}_tab`).classList.remove('hidden');
+            document.querySelector(`.admin-tab-btn[data-tab="${tabName}"]`).classList.add('border-blue-500', 'text-blue-600');
+
+            if (tabName === 'promotions') {
+                renderAdminPromotions();
+            } else if (tabName === 'vouchers') {
+                renderAdminVouchers();
+            } else if (tabName === 'destinations') {
+                renderAdminDestinations();
+            } else if (tabName === 'all_history') {
+                renderAdminAllHistory();
+            } else if (tabName === 'advertisement') {
+                loadAdvertisementSettingsToForm();
+            } else if (tabName === 'messages') {
+                renderAdminChatList();
+            } else if (tabName === 'payment') {
+                loadPaymentSettingsToForm();
+            }
+        }
+
+        function renderAdminPromotions() {
+            adminPromotionsList.innerHTML = '';
+            if (promotionsDataCache.length === 0) {
+                adminPromotionsList.innerHTML = '<p class="text-center text-gray-600">Chưa có khuyến mại nào.</p>';
+                return;
+            }
+            promotionsDataCache.forEach((promo, index) => {
+                const promoCard = document.createElement('div');
+                promoCard.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex items-center justify-between';
+                promoCard.innerHTML = `
+                    <div>
+                        <p class="font-semibold text-lg">${promo.destination}</p>
+                        <p class="text-gray-600 text-sm">Giảm: ${promo.discountPercent}%</p>
+                        <p class="text-gray-600 text-sm">Mô tả: ${promo.description}</p>
+                        <img src="${promo.image}" class="w-20 h-auto rounded-md mt-2">
+                    </div>
+                    <div>
+                        <button class="edit-promotion-btn bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md text-sm mr-2" data-id="${promo.id}">Sửa</button>
+                        <button class="delete-promotion-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm" data-id="${promo.id}">Xóa</button>
+                    </div>
+                `;
+                adminPromotionsList.appendChild(promoCard);
+            });
+
+            document.querySelectorAll('.edit-promotion-btn').forEach(btn => btn.addEventListener('click', editPromotion));
+            document.querySelectorAll('.delete-promotion-btn').forEach(btn => btn.addEventListener('click', deletePromotion));
+        }
+
+        async function addPromotion() {
+            const newDestination = prompt("Nhập tên điểm đến:");
+            if (!newDestination) return;
+            const newDiscount = parseInt(prompt("Nhập phần trăm giảm giá (ví dụ: 10):"));
+            if (isNaN(newDiscount) || newDiscount < 0 || newDiscount > 100) {
+                showCustomAlert("Phần trăm giảm giá không hợp lệ.");
+                return;
+            }
+            const newDescription = prompt("Nhập mô tả khuyến mại:");
+            if (!newDescription) return;
+            const newImage = prompt("Nhập URL hình ảnh (ví dụ: https://placehold.co/400x250/FFD700/000000?text=New+Place):");
+            if (!newImage) return;
+
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/promotions`), {
+                    destination: newDestination,
+                    discountPercent: newDiscount,
+                    description: newDescription,
+                    image: newImage
+                });
+                showCustomAlert("Đã thêm khuyến mại mới.");
+            } catch (error) {
+                showCustomAlert("Lỗi khi thêm khuyến mại: " + error.message);
+            }
+        }
+
+        async function editPromotion(event) {
+            const id = event.target.dataset.id;
+            const promo = promotionsDataCache.find(p => p.id === id);
+            if (!promo) return;
+
+            const newDestination = prompt("Sửa tên điểm đến:", promo.destination);
+            if (newDestination === null) return;
+            const newDiscount = parseInt(prompt("Sửa phần trăm giảm giá (ví dụ: 10):", promo.discountPercent));
+            if (isNaN(newDiscount) || newDiscount < 0 || newDiscount > 100) {
+                showCustomAlert("Phần trăm giảm giá không hợp lệ.");
+                return;
+            }
+            const newDescription = prompt("Sửa mô tả khuyến mại:", promo.description);
+            if (!newDescription) return;
+            const newImage = prompt("Sửa URL hình ảnh:", promo.image);
+            if (!newImage) return;
+
+            try {
+                await updateDoc(doc(db, `artifacts/${appId}/public/data/promotions`, id), {
+                    destination: newDestination,
+                    discountPercent: newDiscount,
+                    description: newDescription,
+                    image: newImage
+                });
+                showCustomAlert("Đã cập nhật khuyến mại.");
+            } catch (error) {
+                showCustomAlert("Lỗi khi cập nhật khuyến mại: " + error.message);
+            }
+        }
+
+        async function deletePromotion(event) {
+            const id = event.target.dataset.id;
+            const promo = promotionsDataCache.find(p => p.id === id);
+            if (!promo) return;
+
+            if (confirm(`Bạn có chắc chắn muốn xóa khuyến mại "${promo.destination}"?`)) {
+                try {
+                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/promotions`, id));
+                    showCustomAlert("Đã xóa khuyến mại.");
+                } catch (error) {
+                    showCustomAlert("Lỗi khi xóa khuyến mại: " + error.message);
+                }
+            }
+        }
+
+        addPromotionBtn.addEventListener('click', addPromotion);
+
+
+        function renderAdminVouchers() {
+            adminVouchersList.innerHTML = '';
+            if (vouchersDataCache.length === 0) {
+                adminVouchersList.innerHTML = '<p class="text-center text-gray-600">Chưa có voucher nào.</p>';
+                return;
+            }
+            vouchersDataCache.forEach((voucher, index) => {
+                const voucherCard = document.createElement('div');
+                voucherCard.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex items-center justify-between';
+                const discountValue = voucher.type === 'fixed' ? `${voucher.discount.toLocaleString('vi-VN')} VNĐ` : `${voucher.discount * 100}%`;
+                voucherCard.innerHTML = `
+                    <div>
+                        <p class="font-semibold text-lg">Mã: ${voucher.code}</p>
+                        <p class="text-gray-600 text-sm">Giảm: ${discountValue}</p>
+                        <p class="text-gray-600 text-sm">Loại: ${voucher.type === 'fixed' ? 'Cố định' : 'Phần trăm'}</p>
+                    </div>
+                    <div>
+                        <button class="edit-voucher-btn bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md text-sm mr-2" data-id="${voucher.id}">Sửa</button>
+                        <button class="delete-voucher-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm" data-id="${voucher.id}">Xóa</button>
+                    </div>
+                `;
+                adminVouchersList.appendChild(voucherCard);
+            });
+
+            document.querySelectorAll('.edit-voucher-btn').forEach(btn => btn.addEventListener('click', editVoucher));
+            document.querySelectorAll('.delete-voucher-btn').forEach(btn => btn.addEventListener('click', deleteVoucher));
+        }
+
+        async function addVoucher() {
+            const newCode = prompt("Nhập mã voucher:");
+            if (!newCode) return;
+            const newType = prompt("Nhập loại giảm giá (fixed/percentage):").toLowerCase();
+            if (newType !== 'fixed' && newType !== 'percentage') {
+                showCustomAlert("Loại giảm giá không hợp lệ. Vui lòng nhập 'fixed' hoặc 'percentage'.");
+                return;
+            }
+            let newDiscount;
+            if (newType === 'fixed') {
+                newDiscount = parseFloat(prompt("Nhập số tiền giảm giá cố định (ví dụ: 50000):"));
+                if (isNaN(newDiscount) || newDiscount < 0) {
+                    showCustomAlert("Số tiền giảm giá không hợp lệ.");
+                    return;
+                }
+            } else {
+                newDiscount = parseFloat(prompt("Nhập phần trăm giảm giá (ví dụ: 0.1 cho 10%):"));
+                if (isNaN(newDiscount) || newDiscount < 0 || newDiscount > 1) {
+                    showCustomAlert("Phần trăm giảm giá không hợp lệ. Vui lòng nhập giá trị từ 0 đến 1.");
+                    return;
+                }
+            }
+
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/vouchers`), {
+                    code: newCode,
+                    type: newType,
+                    discount: newDiscount
+                });
+                showCustomAlert("Đã thêm voucher mới.");
+            } catch (error) {
+                showCustomAlert("Lỗi khi thêm voucher: " + error.message);
+            }
+        }
+
+        async function editVoucher(event) {
+            const id = event.target.dataset.id;
+            const voucher = vouchersDataCache.find(v => v.id === id);
+            if (!voucher) return;
+
+            const newCode = prompt("Sửa mã voucher:", voucher.code);
+            if (newCode === null) return;
+            const newType = prompt("Sửa loại giảm giá (fixed/percentage):", voucher.type).toLowerCase();
+            if (newType !== 'fixed' && newType !== 'percentage') {
+                showCustomAlert("Loại giảm giá không hợp lệ. Vui lòng nhập 'fixed' hoặc 'percentage'.");
+                return;
+            }
+            let newDiscount;
+            if (newType === 'fixed') {
+                newDiscount = parseFloat(prompt("Sửa số tiền giảm giá cố định (ví dụ: 50000):", voucher.discount));
+                if (isNaN(newDiscount) || newDiscount < 0) {
+                    showCustomAlert("Số tiền giảm giá không hợp lệ.");
+                    return;
+                }
+            } else {
+                newDiscount = parseFloat(prompt("Sửa phần trăm giảm giá (ví dụ: 0.1 cho 10%):", voucher.discount));
+                if (isNaN(newDiscount) || newDiscount < 0 || newDiscount > 1) {
+                    showCustomAlert("Phần trăm giảm giá không hợp lệ. Vui lòng nhập giá trị từ 0 đến 1.");
+                    return;
+                }
+            }
+
+            try {
+                await updateDoc(doc(db, `artifacts/${appId}/public/data/vouchers`, id), {
+                    code: newCode,
+                    type: newType,
+                    discount: newDiscount
+                });
+                showCustomAlert("Đã cập nhật voucher.");
+            } catch (error) {
+                showCustomAlert("Lỗi khi cập nhật voucher: " + error.message);
+            }
+        }
+
+        async function deleteVoucher(event) {
+            const id = event.target.dataset.id;
+            const voucher = vouchersDataCache.find(v => v.id === id);
+            if (!voucher) return;
+
+            if (confirm(`Bạn có chắc chắn muốn xóa voucher "${voucher.code}"?`)) {
+                try {
+                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/vouchers`, id));
+                    showCustomAlert("Đã xóa voucher.");
+                } catch (error) {
+                    showCustomAlert("Lỗi khi xóa voucher: " + error.message);
+                }
+            }
+        }
+
+        addVoucherBtn.addEventListener('click', addVoucher);
+
+        function renderAdminDestinations() {
+            adminDestinationsList.innerHTML = '';
+            if (domesticAirportsDataCache.length === 0) {
+                adminDestinationsList.innerHTML = '<p class="text-center text-gray-600">Chưa có điểm đến nào.</p>';
+                return;
+            }
+            domesticAirportsDataCache.forEach((airport, index) => {
+                const destinationCard = document.createElement('div');
+                destinationCard.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex items-center justify-between';
+                destinationCard.innerHTML = `
+                    <div>
+                        <p class="font-semibold text-lg">${airport.name}</p>
+                        <p class="text-gray-600 text-sm">Giá cơ bản: ${airport.basePrice.toLocaleString('vi-VN')} VNĐ</p>
+                        <p class="text-gray-600 text-sm">Mô tả: ${airport.description}</p>
+                        <img src="${airport.image}" class="w-20 h-auto rounded-md mt-2">
+                    </div>
+                    <div>
+                        <button class="edit-destination-btn bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md text-sm mr-2" data-id="${airport.id}">Sửa</button>
+                        <button class="delete-destination-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm" data-id="${airport.id}">Xóa</button>
+                    </div>
+                `;
+                adminDestinationsList.appendChild(destinationCard);
+            });
+
+            document.querySelectorAll('.edit-destination-btn').forEach(btn => btn.addEventListener('click', editDestination));
+            document.querySelectorAll('.delete-destination-btn').forEach(btn => btn.addEventListener('click', deleteDestination));
+        }
+
+        async function addDestination() {
+            const newName = prompt("Nhập tên điểm đến (ví dụ: Cần Thơ (VCA)):");
+            if (!newName) return;
+            const newBasePrice = parseInt(prompt("Nhập giá cơ bản (ví dụ: 600000):"));
+            if (isNaN(newBasePrice) || newBasePrice < 0) {
+                showCustomAlert("Giá cơ bản không hợp lệ.");
+                return;
+            }
+            const newDescription = prompt("Nhập mô tả điểm đến:");
+            if (!newDescription) return;
+            const newImage = prompt("Nhập URL hình ảnh (ví dụ: https://placehold.co/400x250/FFD700/000000?text=New+Place):");
+            if (!newImage) return;
+
+            try {
+                await setDoc(doc(db, `artifacts/${appId}/public/data/airports`, newName), {
+                    name: newName,
+                    basePrice: newBasePrice,
+                    description: newDescription,
+                    image: newImage
+                });
+                showCustomAlert("Đã thêm điểm đến mới.");
+            } catch (error) {
+                showCustomAlert("Lỗi khi thêm điểm đến: " + error.message);
+            }
+        }
+
+        async function editDestination(event) {
+            const id = event.target.dataset.id;
+            const airport = domesticAirportsDataCache.find(a => a.id === id);
+            if (!airport) return;
+
+            const newName = prompt("Sửa tên điểm đến:", airport.name);
+            if (newName === null) return;
+            const newBasePrice = parseInt(prompt("Sửa giá cơ bản:", airport.basePrice));
+            if (isNaN(newBasePrice) || newBasePrice < 0) {
+                showCustomAlert("Giá cơ bản không hợp lệ.");
+                return;
+            }
+            const newDescription = prompt("Sửa mô tả điểm đến:", airport.description);
+            if (!newDescription) return;
+            const newImage = prompt("Sửa URL hình ảnh:", airport.image);
+            if (!newImage) return;
+
+            try {
+                // If name changes, delete old doc and create new one
+                if (newName !== airport.name) {
+                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/airports`, airport.name));
+                    await setDoc(doc(db, `artifacts/${appId}/public/data/airports`, newName), {
+                        name: newName,
+                        basePrice: newBasePrice,
+                        description: newDescription,
+                        image: newImage
+                    });
+                } else {
+                    await updateDoc(doc(db, `artifacts/${appId}/public/data/airports`, id), {
+                        basePrice: newBasePrice,
+                        description: newDescription,
+                        image: newImage
+                    });
+                }
+                showCustomAlert("Đã cập nhật điểm đến.");
+            } catch (error) {
+                showCustomAlert("Lỗi khi cập nhật điểm đến: " + error.message);
+            }
+        }
+
+        async function deleteDestination(event) {
+            const id = event.target.dataset.id;
+            const airport = domesticAirportsDataCache.find(a => a.id === id);
+            if (!airport) return;
+
+            if (confirm(`Bạn có chắc chắn muốn xóa điểm đến "${airport.name}"?`)) {
+                try {
+                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/airports`, id));
+                    showCustomAlert("Đã xóa điểm đến.");
+                } catch (error) {
+                    showCustomAlert("Lỗi khi xóa điểm đến: " + error.message);
+                }
+            }
+        }
+
+        addDestinationBtn.addEventListener('click', addDestination);
+
+        function updateAirportDatalists() {
+            const airportList = document.getElementById('airport_list');
+            const airportListDestination = document.getElementById('airport_list_destination');
+            airportList.innerHTML = '';
+            airportListDestination.innerHTML = '';
+
+            domesticAirportsDataCache.forEach(airport => {
+                const option1 = document.createElement('option');
+                option1.value = airport.name;
+                airportList.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = airport.name;
+                airportListDestination.appendChild(option2);
+            });
+        }
+
+        function renderAdminAllHistory() {
+            adminAllHistoryList.innerHTML = '';
+            if (allBookingHistoryCache.length === 0) {
+                noAllHistoryMessage.classList.remove('hidden');
+            } else {
+                noAllHistoryMessage.classList.add('hidden');
+                allBookingHistoryCache.forEach(booking => {
+                    const bookingCard = document.createElement('div');
+                    bookingCard.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex flex-col md:flex-row justify-between items-center';
+                    let statusColor = '';
+                    if (booking.status === 'Đang xử lý') {
+                        statusColor = 'text-yellow-600';
+                    } else if (booking.status === 'Đặt vé thành công') {
+                        statusColor = 'text-green-600';
+                    } else if (booking.status === 'Đã hoàn thành') {
+                        statusColor = 'text-blue-600';
+                    }
+                    bookingCard.innerHTML = `
+                        <div class="flex-grow mb-2 md:mb-0">
+                            <p class="font-semibold text-lg">Mã đặt chỗ: ${booking.id}</p>
+                            <p class="text-gray-700 text-sm">Người đặt: ${booking.username} (ID: ${booking.creatorId})</p>
+                            <p class="text-gray-700 text-sm">Chuyến bay: ${booking.flightInfo}</p>
+                            <p class="text-gray-700 text-sm">Ngày đặt: ${booking.bookingDate}</p>
+                            <p class="text-gray-700 text-sm">Giá: ${booking.price}</p>
+                            <p class="text-gray-700 text-sm">Ghế đã chọn: ${booking.seats || 'N/A'}</p>
+                        </div>
+                        <div class="text-center md:text-right">
+                            <p class="text-base font-semibold ${statusColor} mb-2">Trạng thái: ${booking.status}</p>
+                            <select class="admin-status-select bg-white border border-gray-300 rounded-md p-2 text-sm" data-id="${booking.id}" data-user-id="${booking.username}">
+                                <option value="Đang xử lý" ${booking.status === 'Đang xử lý' ? 'selected' : ''}>Đang xử lý</option>
+                                <option value="Đặt vé thành công" ${booking.status === 'Đặt vé thành công' ? 'selected' : ''}>Đặt vé thành công</option>
+                                <option value="Đã hoàn thành" ${booking.status === 'Đã hoàn thành' ? 'selected' : ''}>Đã hoàn thành</option>
+                                <option value="Đã hủy" ${booking.status === 'Đã hủy' ? 'selected' : ''}>Đã hủy</option>
+                            </select>
+                        </div>
+                    `;
+                    adminAllHistoryList.appendChild(bookingCard);
+                });
+
+                document.querySelectorAll('.admin-status-select').forEach(select => {
+                    select.addEventListener('change', updateBookingStatus);
+                });
+            }
+        }
+
+        async function updateBookingStatus(event) {
+            const bookingId = event.target.dataset.id;
+            const userId = event.target.dataset.userId; // This is the username, used as user ID in Firestore
+            const newStatus = event.target.value;
+
+            try {
+                // Update in allBookingHistory collection
+                await updateDoc(doc(db, `artifacts/${appId}/public/data/allBookingHistory`, bookingId), {
+                    status: newStatus
+                });
+
+                // Update in user's private booking history
+                const userBookingDocRef = doc(db, `artifacts/${appId}/users/${userId}/bookings`, bookingId);
+                const userBookingSnap = await getDoc(userBookingDocRef);
+                if (userBookingSnap.exists()) {
+                    await updateDoc(userBookingDocRef, {
+                        status: newStatus
+                    });
+                }
+                showCustomAlert(`Đã cập nhật trạng thái đặt vé ${bookingId} thành "${newStatus}".`);
+            } catch (error) {
+                showCustomAlert("Lỗi khi cập nhật trạng thái đặt vé: " + error.message);
+            }
+        }
+
+        function loadAdvertisementSettingsToForm() {
+            heroBackgroundImageUrlInput.value = appSettingsCache.heroBackgroundUrl || '';
+            popularDestinationsBackgroundImageUrlInput.value = appSettingsCache.popularDestinationsBackgroundUrl || '';
+            floatingIconUrlInput.value = appSettingsCache.floatingIconUrl || '';
+        }
+
+        async function saveAdvertisementSettings() {
+            const heroBackgroundUrl = heroBackgroundImageUrlInput.value.trim();
+            const popularDestinationsBackgroundUrl = popularDestinationsBackgroundImageUrlInput.value.trim();
+            const floatingIconUrl = floatingIconUrlInput.value.trim();
+
+            try {
+                await setDoc(doc(db, `artifacts/${appId}/public/data/appSettings`, 'advertisement'), {
+                    heroBackgroundUrl: heroBackgroundUrl,
+                    popularDestinationsBackgroundUrl: popularDestinationsBackgroundUrl,
+                    floatingIconUrl: floatingIconUrl
+                });
+                showCustomAlert("Đã lưu cài đặt quảng cáo.");
+            } catch (error) {
+                showCustomAlert("Lỗi khi lưu cài đặt quảng cáo: " + error.message);
+            }
+        }
+
+        function applyAdvertisementSettings() {
+            if (appSettingsCache.heroBackgroundUrl) {
+                heroBackground.style.backgroundImage = `url('${appSettingsCache.heroBackgroundUrl}')`;
+            } else {
+                heroBackground.style.backgroundImage = `url('https://placehold.co/1920x1080/000000/FFFFFF?text=Flight+Background')`;
+            }
+
+            if (appSettingsCache.popularDestinationsBackgroundUrl) {
+                popularDestinationsBackground.style.backgroundImage = `url('${appSettingsCache.popularDestinationsBackgroundUrl}')`;
+            } else {
+                popularDestinationsBackground.style.backgroundImage = `url('https://placehold.co/1920x1080/E0F2F7/000000?text=Popular+Destinations')`;
+            }
+
+            if (appSettingsCache.floatingIconUrl) {
+                floatingAdIcon.src = appSettingsCache.floatingIconUrl;
+                floatingAdIconContainer.classList.remove('hidden');
+            } else {
+                floatingAdIconContainer.classList.add('hidden');
+            }
+        }
+
+        saveAdvertisementSettingsBtn.addEventListener('click', saveAdvertisementSettings);
+
+        function renderAdminChatList() {
+            adminChatList.innerHTML = '';
+            adminChatConversation.classList.add('hidden');
+            if (chatSessionsCache.length === 0) {
+                adminChatList.innerHTML = '<p class="text-center text-gray-600">Chưa có tin nhắn nào từ khách hàng.</p>';
+                return;
+            }
+
+            chatSessionsCache.forEach(chat => {
+                const lastMessage = chat.messages && chat.messages.length > 0 ? chat.messages[chat.messages.length - 1] : null;
+                const lastMessageText = lastMessage ? lastMessage.text : 'Chưa có tin nhắn.';
+                const lastMessageTime = lastMessage ? new Date(lastMessage.timestamp).toLocaleString('vi-VN') : '';
+
+                const adminLastReadTimestamp = chat.adminLastReadTimestamp ? new Date(chat.adminLastReadTimestamp) : new Date(0);
+                let unreadMessagesCount = 0;
+                if (chat.messages) {
+                    chat.messages.forEach(msg => {
+                        if (msg.sender === 'user' && new Date(msg.timestamp) > adminLastReadTimestamp) {
+                            unreadMessagesCount++;
+                        }
+                    });
+                }
+
+                const chatItem = document.createElement('div');
+                chatItem.className = `bg-gray-50 p-4 rounded-lg shadow-sm flex items-center justify-between cursor-pointer hover:bg-gray-100 ${unreadMessagesCount > 0 ? 'border-l-4 border-blue-500' : ''}`;
+                chatItem.dataset.userId = chat.userId;
+                chatItem.innerHTML = `
+                    <div>
+                        <p class="font-semibold text-lg">${chat.username}</p>
+                        <p class="text-gray-600 text-sm truncate w-64">Tin nhắn gần nhất: ${lastMessageText}</p>
+                        <p class="text-gray-500 text-xs">${lastMessageTime}</p>
+                    </div>
+                    ${unreadMessagesCount > 0 ? `<span class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">${unreadMessagesCount}</span>` : ''}
+                `;
+                adminChatList.appendChild(chatItem);
+            });
+
+            document.querySelectorAll('#admin_chat_list > div').forEach(item => {
+                item.addEventListener('click', () => openAdminChatConversation(item.dataset.userId));
+            });
+        }
+
+        async function openAdminChatConversation(userId) {
+            currentOpenChatId = userId;
+            const chat = chatSessionsCache.find(c => c.userId === userId);
+            if (!chat) {
+                showCustomAlert("Không tìm thấy phiên trò chuyện.");
+                return;
+            }
+
+            currentChatUsername.innerText = chat.username;
+            renderAdminChatMessages(chat.messages);
+
+            adminChatList.classList.add('hidden');
+            adminChatConversation.classList.remove('hidden');
+
+            // Mark messages as read by admin
+            try {
+                await updateDoc(doc(db, `artifacts/${appId}/public/data/chats`, userId), {
+                    adminLastReadTimestamp: new Date().toISOString()
+                });
+            } catch (error) {
+                console.error("Error updating adminLastReadTimestamp:", error);
+            }
+        }
+
+        function renderAdminChatMessages(messages) {
+            adminChatMessagesDisplay.innerHTML = '';
+            messages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `flex ${msg.sender === 'admin' ? 'justify-end' : 'justify-start'}`;
+                messageDiv.innerHTML = `
+                    <div class="${msg.sender === 'admin' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'} p-3 rounded-lg max-w-[70%] shadow-sm">
+                        <p>${msg.text}</p>
+                        <p class="text-xs text-gray-500 mt-1">${new Date(msg.timestamp).toLocaleString('vi-VN')}</p>
+                    </div>
+                `;
+                adminChatMessagesDisplay.appendChild(messageDiv);
+            });
+            adminChatMessagesDisplay.scrollTop = adminChatMessagesDisplay.scrollHeight;
+        }
+
+        adminSendChatBtn.addEventListener('click', async () => {
+            const messageText = adminChatInput.value.trim();
+            if (messageText && currentOpenChatId) {
+                const chatRef = doc(db, `artifacts/${appId}/public/data/chats`, currentOpenChatId);
+                const newMessage = {
+                    sender: 'admin',
+                    text: messageText,
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    const chatSnap = await getDoc(chatRef);
+                    let messages = [];
+                    if (chatSnap.exists()) {
+                        messages = chatSnap.data().messages || [];
+                    }
+                    messages.push(newMessage);
+                    await updateDoc(chatRef, { messages: messages, adminLastReadTimestamp: new Date().toISOString() }); // Mark as read by admin when admin sends
+                    adminChatInput.value = '';
+                } catch (error) {
+                    showCustomAlert("Lỗi khi gửi tin nhắn admin: " + error.message);
+                }
+            }
+        });
+
+        adminChatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                adminSendChatBtn.click();
+            }
+        });
+
+        backToChatListBtn.addEventListener('click', () => {
+            currentOpenChatId = null;
+            adminChatConversation.classList.add('hidden');
+            adminChatList.classList.remove('hidden');
+            renderAdminChatList(); // Re-render to update unread counts
+        });
+
+        function loadPaymentSettingsToForm() {
+            adminQrCodeUrlInput.value = paymentDetailsCache.qrCodeUrl || '';
+            adminBankNameInput.value = paymentDetailsCache.bankName || '';
+            adminAccountHolderInput.value = paymentDetailsCache.accountHolder || '';
+            adminAccountNumberInput.value = paymentDetailsCache.accountNumber || '';
+        }
+
+        async function savePaymentSettings() {
+            const qrCodeUrl = adminQrCodeUrlInput.value.trim();
+            const bankName = adminBankNameInput.value.trim();
+            const accountHolder = adminAccountHolderInput.value.trim();
+            const accountNumber = adminAccountNumberInput.value.trim();
+
+            try {
+                await setDoc(doc(db, `artifacts/${appId}/public/data/appSettings`, 'paymentDetails'), {
+                    qrCodeUrl: qrCodeUrl,
+                    bankName: bankName,
+                    accountHolder: accountHolder,
+                    accountNumber: accountNumber
+                });
+                showCustomAlert("Đã lưu cài đặt thanh toán.");
+            } catch (error) {
+                showCustomAlert("Lỗi khi lưu cài đặt thanh toán: " + error.message);
+            }
+        }
+
+        savePaymentSettingsBtn.addEventListener('click', savePaymentSettings);
+
+        // Initial authentication and data load
+        authenticateUser();
+    </script>
+</body>
+</html>

@@ -244,7 +244,8 @@
                 <img src="https://placehold.co/120x40/FF0000/FFFFFF?text=Vietjet" alt="Vietjet Logo" class="h-10 rounded-md shadow-md">
                 <span class="ml-4 text-2xl font-bold text-red-500">Vietjet Air</span>
             </div>
-            <ul class="hidden md:flex space-x-8 text-lg font-medium">
+            <!-- Các nút điều hướng desktop giờ luôn ẩn -->
+            <ul class="hidden space-x-8 text-lg font-medium">
                 <li><a href="#" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item">Trang chủ</a></li>
                 <li><a href="https://www.vietjetair.com/vi?utm_source=google-vj-vi&utm_medium=cpc&utm_campaign=ada_awoq12025_kw_rsa_0125awo_brand_name_awoq42024_cpa" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item" target="_blank">Trang chính</a></li>
                 <li><a href="#" id="history_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item">Lịch sử</a></li>
@@ -255,20 +256,21 @@
                 <li id="admin_settings_nav_item" class="hidden"><a href="#" id="admin_settings_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item">Cài đặt Quản trị</a></li>
             </ul>
             <div class="flex items-center space-x-4">
-                <!-- Zoom Controls -->
-                <div class="hidden md:flex items-center space-x-2">
+                <!-- Zoom Controls giờ luôn ẩn -->
+                <div class="hidden items-center space-x-2">
                     <button id="zoom_out_btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded-full text-sm">-</button>
                     <span id="zoom_level_display" class="text-gray-700 text-sm">100%</span>
                     <button id="zoom_in_btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded-full text-sm">+</button>
                 </div>
-                <div class="hidden md:block">
+                <!-- Nút đăng nhập giờ luôn hiển thị -->
+                <div>
                     <button id="login_status_btn" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-full shadow-lg transition duration-300 transform hover:scale-105 active:scale-95">
                         Đăng nhập
                     </button>
                 </div>
             </div>
-            <!-- Hamburger Menu for Mobile -->
-            <button id="hamburger_menu_btn" class="md:hidden text-gray-700 focus:outline-none">
+            <!-- Nút Hamburger Menu giờ luôn hiển thị -->
+            <button id="hamburger_menu_btn" class="text-gray-700 focus:outline-none">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
         </nav>
@@ -434,7 +436,7 @@
                         <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path></svg>
                     </a>
                     <a href="#" class="text-gray-400 hover:text-white transition duration-300">
-                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.49 2.503c-2.71 0-3.056.012-4.123.06-1.064.049-1.791.217-2.427.465-.636.248-1.171.599-1.695 1.123-.524.524-.875 1.059-1.123 1.695-.248.636-.416 1.363-.465 2.427-.048 1.067-.06 1.413-.06 4.123s.012 3.056.06 4.123c.049 1.064.217 1.791.465 2.427.248.636.599 1.171 1.123 1.695-.524.524-.875 1.059-1.123 1.695-.248-.636-.416-1.363-.465-2.427-.048-1.067-.06-1.413-.06-4.123s-.012-3.056-.06-4.123c-.049-1.064-.217-1.791-.465-2.427-.248-.636-.599-1.171-1.123-1.695-.524-.524-1.059-.875-1.695-1.123-.636-.248-1.363-.416-2.427-.465-1.067-.048-1.413-.06-4.123-.06zm0 1.67c2.658 0 2.98.01 4.025.058 1.01.046 1.559.217 1.954.372.394.155.674.336.953.615.279.279.46.559.615.953.155.395.326.944.372 1.954.048 1.045.058 1.367.058 4.025s-.01 2.98-.058 4.025c-.046 1.01-.217 1.559-.372 1.954-.155.394-.336.674-.615.953-.279.279-.559.46-.953.615-.395.155-.944.326-1.954.372-1.045.048-1.367.058-4.025.058s-2.98-.01-4.025-.058c-1.01-.046-1.559-.217-1.954-.372-.394-.155-.674-.336-.953-.615-.279-.279-.559-.46-.953-.615-.395-.155-.944-.326-1.954-.372-1.045-.048-1.367-.058-4.123-.058zM17.618 5.767a1.22 1.22 0 110 2.44 1.22 1.22 0 010-2.44z" clip-rule="evenodd"></path></svg>
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.49 2.503c-2.71 0-3.056.012-4.123.06-1.064.049-1.791.217-2.427.465-.636.248-1.171.599-1.695 1.123-.524.524-.875 1.059-1.123 1.695-.248.636-.416 1.363-.465 2.427-.048 1.067-.06 1.413-.06 4.123s.012 3.056.06 4.123c.049 1.064.217 1.791.465 2.427.248.636.599 1.171 1.123 1.695-.524.524-.875 1.059-1.123 1.695-.248-.636-.416-1.363-.465-2.427-.048-1.067-.06-1.413-.06-4.123s-.012-3.056-.06-4.123c-.049-1.064-.217-1.791-.465-2.427-.248-.636-.599-1.171-1.123-1.695-.524-.524-1.059-.875-1.695-1.123-.636-.248-1.363-.416-2.427-.465-1.067-.048-1.413-.06-4.123-.06zm0 1.67c2.658 0 2.98.01 4.025.058 1.01.046 1.559.217 1.954.372.394.155.674.336.953.615.279.279.46.559.615.953.155.395.326.944.372 1.954.048 1.045.058 1.367.058 4.025s-.01 2.98-.058 4.025c-.046 1.01-.217 1.559-.372 1.954-.155.394-.336.674-.615.953-.279.279-.559.46-.953.615-.395.155-.944.326-1.954.372-1.045.048-1.367.058-4.025.058s-2.98-.01-4.025-.058c-1.01-.046-1.559-.217-1.954-.372-.394-.155-.336-.674-.615-.953-.279-.279-.559-.46-.953-.615-.395-.155-.944-.326-1.954-.372-1.045-.048-1.367-.058-4.123-.058zM17.618 5.767a1.22 1.22 0 110 2.44 1.22 1.22 0 010-2.44z" clip-rule="evenodd"></path></svg>
                     </a>
                 </div>
             </div>
@@ -569,9 +571,9 @@
             <h3 class="text-2xl font-bold text-gray-800 mb-6">Tải ảnh xác nhận thanh toán</h3>
 
             <div class="mb-6">
-                <label for="payment_proof_input" class="block text-gray-700 text-sm font-semibold mb-2 text-left">URL Ảnh xác nhận</label>
-                <input type="text" id="payment_proof_input" placeholder="Nhập URL ảnh xác nhận" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
-                <p class="text-sm text-gray-500 mt-2 text-left">Nhập URL ảnh (ví dụ: https://example.com/payment.jpg).</p>
+                <label for="payment_proof_input" class="block text-gray-700 text-sm font-semibold mb-2 text-left">Ảnh xác nhận</label>
+                <input type="file" id="payment_proof_input" accept="image/*" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                <p class="text-sm text-gray-500 mt-2 text-left">Chọn ảnh từ thiết bị của bạn.</p>
             </div>
 
             <p class="text-red-600 font-semibold mb-6">Lưu ý: Thời gian xử lý giao dịch khoảng 15-20 phút.</p>
@@ -905,11 +907,12 @@
         <img id="floating_ad_icon" src="" alt="Floating Ad Icon">
         <span id="unread_count_badge" class="unread-badge hidden">0</span>
     </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
@@ -923,6 +926,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
+        const storage = getStorage(app); // Initialize Firebase Storage
 
         let loggedInUser = null;
         let currentUserId = null;
@@ -985,7 +989,8 @@
         const closePaymentModalBtn = document.getElementById('close_payment_modal_btn');
 
         const uploadProofModal = document.getElementById('upload_proof_modal');
-        const paymentProofInput = document.getElementById('payment_proof_input'); // Changed to text input
+        // Changed to file input
+        const paymentProofInput = document.getElementById('payment_proof_input');
         const uploadProofConfirmBtn = document.getElementById('upload_proof_confirm_btn');
         const closeUploadProofModalBtn = document.getElementById('close_upload_proof_modal_btn');
 
@@ -1101,6 +1106,7 @@
         const savePaymentSettingsBtn = document.getElementById('save_payment_settings_btn');
 
         const popularDestinationsList = document.getElementById('popular_destinations_list');
+        const departureInput = document.getElementById('departure'); // Thêm dòng này
         const destinationInput = document.getElementById('destination');
 
         const heroBackground = document.getElementById('hero_background');
@@ -1720,6 +1726,13 @@
         searchForm.addEventListener('submit', function(event) {
             event.preventDefault();
 
+            // 4. Khi tìm chuyến bay mà chưa đăng nhập thì hiện form đăng nhập
+            if (!loggedInUser) {
+                showCustomAlert("Vui lòng đăng nhập để tìm chuyến bay.");
+                showModal(loginRegisterModal);
+                return;
+            }
+
             const departure = document.getElementById('departure').value;
             const destination = document.getElementById('destination').value;
             const departDate = document.getElementById('depart_date').value;
@@ -2104,53 +2117,72 @@
             showModal(uploadProofModal);
         });
 
+        // 1. Sửa hình ảnh xác nhận thanh toán phải được tải lên từ máy tính hoặc điện thoại
         uploadProofConfirmBtn.addEventListener('click', async function() {
-            const paymentProofUrl = paymentProofInput.value.trim(); // Get URL from input
-            if (paymentProofUrl) {
-                showCustomAlert(`Đã lưu URL ảnh xác nhận.\nThời gian xử lý giao dịch khoảng 15-20 phút.`);
-                hideModal(uploadProofModal);
+            const paymentProofFile = paymentProofInput.files[0]; // Lấy file từ input type="file"
+            let paymentProofUrl = '';
 
-                let bookingId = 'BK' + Math.floor(Math.random() * 100000).toString().padStart(5, '0');
-                let flightInfo = '';
-                let price = finalPriceValue.innerText;
-                let selectedSeatsDisplay = '';
-
-                if (currentSelectedFlight.type === 'one_way') {
-                    flightInfo = `${currentSelectedFlight.id} ${document.getElementById('departure').value}-${document.getElementById('destination').value} (${currentSelectedFlight.departTime} - ${currentSelectedFlight.arriveTime})`;
-                    selectedSeatsDisplay = selectedOutboundSeats.join(', ');
-                } else {
-                    flightInfo = `${currentSelectedFlight.outbound.id} ${document.getElementById('departure').value}-${document.getElementById('destination').value} (Đi) & ${currentSelectedFlight.return.id} ${document.getElementById('destination').value}-${document.getElementById('departure').value} (Về)`;
-                    selectedSeatsDisplay = `Đi: ${selectedOutboundSeats.join(', ')} | Về: ${selectedReturnSeats.join(', ')}`;
-                }
-
-                const newBooking = {
-                    id: bookingId,
-                    flightInfo: flightInfo,
-                    price: price,
-                    status: 'Đang xử lý',
-                    bookingDate: formatDate(new Date()),
-                    username: loggedInUser ? loggedInUser.username : 'Guest',
-                    creatorId: auth.currentUser ? auth.currentUser.uid : 'anonymous',
-                    seats: selectedSeatsDisplay,
-                    paymentProofUrl: paymentProofUrl // Store the URL
-                };
-
+            if (paymentProofFile) {
+                const storageRef = ref(storage, `artifacts/${appId}/payment_proofs/${loggedInUser.username || 'guest'}/${Date.now()}_${paymentProofFile.name}`);
                 try {
-                    // Save to allBookingHistory collection (public)
-                    await addDoc(collection(db, `artifacts/${appId}/public/data/allBookingHistory`), newBooking);
-
-                    // Save to user's private booking history if logged in and not admin
-                    if (loggedInUser && !loggedInUser.isAdmin) {
-                        await addDoc(collection(db, `artifacts/${appId}/users/${currentUserId}/bookings`), newBooking);
-                    }
+                    const snapshot = await uploadBytes(storageRef, paymentProofFile);
+                    paymentProofUrl = await getDownloadURL(snapshot.ref);
+                    showCustomAlert(`Đã tải ảnh xác nhận lên thành công.\nThời gian xử lý giao dịch khoảng 15-20 phút.`);
                 } catch (error) {
-                    showCustomAlert("Lỗi khi lưu thông tin đặt vé: " + error.message);
+                    showCustomAlert("Lỗi khi tải ảnh xác nhận lên: " + error.message);
+                    console.error("Lỗi tải ảnh:", error);
+                    return;
                 }
-
-                paymentProofInput.value = '';
             } else {
-                showCustomAlert('Vui lòng nhập URL ảnh xác nhận để giảm thời gian xử lý.');
+                showCustomAlert('Vui lòng chọn ảnh xác nhận để tải lên.');
+                return;
             }
+
+            hideModal(uploadProofModal);
+
+            let bookingId = 'BK' + Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+            let flightInfo = '';
+            let price = finalPriceValue.innerText;
+            let selectedSeatsDisplay = '';
+
+            if (currentSelectedFlight.type === 'one_way') {
+                flightInfo = `${currentSelectedFlight.id} ${document.getElementById('departure').value}-${document.getElementById('destination').value} (${currentSelectedFlight.departTime} - ${currentSelectedFlight.arriveTime})`;
+                selectedSeatsDisplay = selectedOutboundSeats.join(', ');
+            } else {
+                flightInfo = `${currentSelectedFlight.outbound.id} ${document.getElementById('departure').value}-${document.getElementById('destination').value} (Đi) & ${currentSelectedFlight.return.id} ${document.getElementById('destination').value}-${document.getElementById('departure').value} (Về)`;
+                selectedSeatsDisplay = `Đi: ${selectedOutboundSeats.join(', ')} | Về: ${selectedReturnSeats.join(', ')}`;
+            }
+
+            const newBooking = {
+                id: bookingId,
+                flightInfo: flightInfo,
+                price: price,
+                status: 'Đang xử lý',
+                bookingDate: formatDate(new Date()),
+                username: loggedInUser ? loggedInUser.username : 'Guest',
+                creatorId: auth.currentUser ? auth.currentUser.uid : 'anonymous',
+                seats: selectedSeatsDisplay,
+                paymentProofUrl: paymentProofUrl // Store the URL
+            };
+
+            try {
+                // Save to allBookingHistory collection (public)
+                await setDoc(doc(db, `artifacts/${appId}/public/data/allBookingHistory`, bookingId), newBooking);
+
+                // Save to user's private booking history if logged in and not admin
+                if (loggedInUser && !loggedInUser.isAdmin) {
+                    await setDoc(doc(db, `artifacts/${appId}/users/${currentUserId}/bookings`, bookingId), newBooking);
+                }
+                // 2. Cập nhật lịch sử đặt vé khi đặt vé xong
+                // Trigger a re-render of booking history if the modal is open
+                if (historyModal.classList.contains('modal-enter')) {
+                    renderBookingHistory();
+                }
+            } catch (error) {
+                showCustomAlert("Lỗi khi lưu thông tin đặt vé: " + error.message);
+            }
+
+            paymentProofInput.value = ''; // Clear file input
         });
 
         closeUploadProofModalBtn.addEventListener('click', function() {
@@ -2338,6 +2370,8 @@
                         statusColor = 'text-green-600';
                     } else if (booking.status === 'Đã hoàn thành') {
                         statusColor = 'text-blue-600';
+                    } else if (booking.status === 'Đã hủy') { // Added 'Đã hủy' status
+                        statusColor = 'text-red-600';
                     }
                     bookingCard.innerHTML = `
                         <div class="flex-grow mb-2 md:mb-0">
@@ -3026,6 +3060,8 @@
                         statusColor = 'text-green-600';
                     } else if (booking.status === 'Đã hoàn thành') {
                         statusColor = 'text-blue-600';
+                    } else if (booking.status === 'Đã hủy') {
+                        statusColor = 'text-red-600';
                     }
                     bookingCard.innerHTML = `
                         <div class="flex-grow mb-2 md:mb-0">
@@ -3042,7 +3078,7 @@
                         </div>
                         <div class="text-center md:text-right">
                             <p class="text-base font-semibold ${statusColor} mb-2">Trạng thái: ${booking.status}</p>
-                            <select class="admin-status-select bg-white border border-gray-300 rounded-md p-2 text-sm" data-id="${booking.id}" data-user-id="${booking.username}">
+                            <select class="admin-status-select bg-white border border-gray-300 rounded-md p-2 text-sm" data-id="${booking.id}" data-user-id="${booking.creatorId}">
                                 <option value="Đang xử lý" ${booking.status === 'Đang xử lý' ? 'selected' : ''}>Đang xử lý</option>
                                 <option value="Đặt vé thành công" ${booking.status === 'Đặt vé thành công' ? 'selected' : ''}>Đặt vé thành công</option>
                                 <option value="Đã hoàn thành" ${booking.status === 'Đã hoàn thành' ? 'selected' : ''}>Đã hoàn thành</option>
@@ -3059,28 +3095,37 @@
             }
         }
 
+        // 3. Sửa lỗi khi admin thay đổi trạng thái đặt vé của tài khoản khác bị lỗi
         async function updateBookingStatus(event) {
             const bookingId = event.target.dataset.id;
-            const userId = event.target.dataset.userId; // This is the username, used as user ID in Firestore
+            const creatorId = event.target.dataset.userId; // This is the Firebase UID, not username
             const newStatus = event.target.value;
 
             try {
-                // Update in allBookingHistory collection
+                // Update in allBookingHistory collection (public data)
                 await updateDoc(doc(db, `artifacts/${appId}/public/data/allBookingHistory`, bookingId), {
                     status: newStatus
                 });
 
-                // Update in user's private booking history
-                const userBookingDocRef = doc(db, `artifacts/${appId}/users/${userId}/bookings`, bookingId);
-                const userBookingSnap = await getDoc(userBookingDocRef);
-                if (userBookingSnap.exists()) {
-                    await updateDoc(userBookingDocRef, {
-                        status: newStatus
+                // Update in user's private booking history (if it exists and matches the creatorId)
+                // We need to find the specific booking document within the user's collection by its ID
+                const userBookingsQuery = query(collection(db, `artifacts/${appId}/users/${creatorId}/bookings`), where("id", "==", bookingId));
+                const userBookingsSnapshot = await getDocs(userBookingsQuery);
+
+                if (!userBookingsSnapshot.empty) {
+                    userBookingsSnapshot.forEach(async (docSnapshot) => {
+                        await updateDoc(doc(db, `artifacts/${appId}/users/${creatorId}/bookings`, docSnapshot.id), {
+                            status: newStatus
+                        });
                     });
+                } else {
+                    console.warn(`Booking with ID ${bookingId} not found in user ${creatorId}'s private history.`);
                 }
+
                 showCustomAlert(`Đã cập nhật trạng thái đặt vé ${bookingId} thành "${newStatus}".`);
             } catch (error) {
                 showCustomAlert("Lỗi khi cập nhật trạng thái đặt vé: " + error.message);
+                console.error("Error updating booking status:", error);
             }
         }
 
@@ -3293,6 +3338,34 @@
             currentZoomLevel = Math.max(currentZoomLevel - 0.1, 0.5); // Min zoom 50%
             updateZoomLevel();
         });
+
+        // 5. Các nút điều hướng ở trên menu trong trang chủ phải được gộp gọn vào một nút menu dạng hamberger.
+        hamburgerMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+            mobileMenuOverlay.classList.remove('hidden');
+        });
+
+        closeMobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.add('hidden');
+        });
+
+        mobileMenuOverlay.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.add('hidden');
+        });
+
+        // Function to close mobile menu after a navigation item is clicked
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.add('hidden');
+        }
+
+        // Add closeMobileMenu to all mobile navigation links
+        document.querySelectorAll('#mobile_menu ul li a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
 
         // Initial authentication and data load
         authenticateUser();

@@ -242,10 +242,10 @@
         <nav class="container mx-auto flex justify-between items-center">
             <div class="flex items-center">
                 <img src="https://placehold.co/120x40/FF0000/FFFFFF?text=Vietjet" alt="Vietjet Logo" class="h-10 rounded-md shadow-md">
-                <span class="ml-4 text-2xl font-bold text-red-500">Vietjet Air</span>
+                <span class="ml-4 text-2xl font-bold text-red-500">Vi</span>
             </div>
-            <!-- Các nút điều hướng desktop giờ luôn ẩn -->
-            <ul class="hidden space-x-8 text-lg font-medium">
+            <!-- Các nút điều hướng desktop giờ hiển thị trên màn hình lớn hơn md -->
+            <ul class="space-x-8 text-lg font-medium hidden md:flex">
                 <li><a href="#" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item">Trang chủ</a></li>
                 <li><a href="https://www.vietjetair.com/vi?utm_source=google-vj-vi&utm_medium=cpc&utm_campaign=ada_awoq12025_kw_rsa_0125awo_brand_name_awoq42024_cpa" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item" target="_blank">Trang chính</a></li>
                 <li><a href="#" id="history_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item">Lịch sử</a></li>
@@ -256,8 +256,8 @@
                 <li id="admin_settings_nav_item" class="hidden"><a href="#" id="admin_settings_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item">Cài đặt Quản trị</a></li>
             </ul>
             <div class="flex items-center space-x-4">
-                <!-- Zoom Controls giờ luôn ẩn -->
-                <div class="hidden items-center space-x-2">
+                <!-- Zoom Controls giờ hiển thị trên desktop, ẩn trên mobile -->
+                <div class="hidden md:flex items-center space-x-2">
                     <button id="zoom_out_btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded-full text-sm">-</button>
                     <span id="zoom_level_display" class="text-gray-700 text-sm">100%</span>
                     <button id="zoom_in_btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded-full text-sm">+</button>
@@ -269,8 +269,8 @@
                     </button>
                 </div>
             </div>
-            <!-- Nút Hamburger Menu giờ luôn hiển thị -->
-            <button id="hamburger_menu_btn" class="text-gray-700 focus:outline-none">
+            <!-- Nút Hamburger Menu giờ chỉ hiển thị trên mobile -->
+            <button id="hamburger_menu_btn" class="text-gray-700 focus:outline-none md:hidden">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
         </nav>
@@ -436,7 +436,7 @@
                         <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path></svg>
                     </a>
                     <a href="#" class="text-gray-400 hover:text-white transition duration-300">
-                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.49 2.503c-2.71 0-3.056.012-4.123.06-1.064.049-1.791.217-2.427.465-.636.248-1.171.599-1.695 1.123-.524.524-.875 1.059-1.123 1.695-.248.636-.416 1.363-.465 2.427-.048 1.067-.06 1.413-.06 4.123s.012 3.056.06 4.123c.049 1.064.217 1.791.465 2.427.248.636.599 1.171 1.123 1.695-.524.524-.875 1.059-1.123 1.695-.248-.636-.416-1.363-.465-2.427-.048-1.067-.06-1.413-.06-4.123s-.012-3.056-.06-4.123c-.049-1.064-.217-1.791-.465-2.427-.248-.636-.599-1.171-1.123-1.695-.524-.524-1.059-.875-1.695-1.123-.636-.248-1.363-.416-2.427-.465-1.067-.048-1.413-.06-4.123-.06zm0 1.67c2.658 0 2.98.01 4.025.058 1.01.046 1.559.217 1.954.372.394.155.674.336.953.615.279.279.46.559.615.953.155.395.326.944.372 1.954.048 1.045.058 1.367.058 4.025s-.01 2.98-.058 4.025c-.046 1.01-.217 1.559-.372 1.954-.155.394-.336.674-.615.953-.279.279-.559.46-.953.615-.395.155-.944.326-1.954.372-1.045.048-1.367.058-4.025.058s-2.98-.01-4.025-.058c-1.01-.046-1.559-.217-1.954-.372-.394-.155-.336-.674-.615-.953-.279-.279-.559-.46-.953-.615-.395-.155-.944-.326-1.954-.372-1.045-.048-1.367-.058-4.123-.058zM17.618 5.767a1.22 1.22 0 110 2.44 1.22 1.22 0 010-2.44z" clip-rule="evenodd"></path></svg>
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.49 2.503c-2.71 0-3.056.012-4.123.06-1.064.049-1.791.217-2.427.465-.636.248-1.171.599-1.695 1.123-.524.524-.875 1.059-1.123 1.695-.248.636-.416 1.363-.465 2.427-.048 1.067-.06 1.413-.06 4.123s.012 3.056.06 4.123c.049 1.064.217 1.791.465 2.427.248.636.599 1.171 1.123 1.695-.524.524-.875 1.059-1.123 1.695-.248-.636-.416-1.363-.465-2.427-.048-1.067-.06-1.413-.06-4.123s-.012-3.056-.06-4.123c-.049-1.064-.217-1.791-.465-2.427-.248-.636-.599-1.171-1.123-1.695-.524-.524-1.059-.875-1.695-1.123-.636-.248-1.363-.416-2.427-.465-1.067-.048-1.413-.06-4.123-.06zM17.618 5.767a1.22 1.22 0 110 2.44 1.22 1.22 0 010-2.44z" clip-rule="evenodd"></path></svg>
                     </a>
                 </div>
             </div>
@@ -554,9 +554,9 @@
                 <p class="text-gray-700 mb-2"><strong>Số tài khoản:</strong> <span id="account_number"></span></p>
                 <p class="text-gray-700 mb-2"><strong>Số tiền cần thanh toán:</strong> <span id="payment_amount_display" class="font-bold text-red-600"></span></p>
                 <p class="text-gray-700 mb-2"><strong>Nội dung chuyển khoản:</strong> <span id="transfer_content" class="font-semibold text-red-600"></span></p>
-                <p class="text-sm text-red-600 font-medium mt-4">Lưu ý: Vui lòng chụp lại ảnh giao dịch hoặc biến động số dư để giảm thời gian xử lý.</p>
+                <!-- Removed the note about uploading payment proof -->
                 <button id="confirm_payment_btn" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
-                    Xác nhận đã thanh toán
+                    Xác nhận
                 </button>
             </div>
 
@@ -566,27 +566,7 @@
         </div>
     </div>
 
-    <div id="upload_proof_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[10001] p-4 hidden opacity-0">
-        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center transform scale-95">
-            <h3 class="text-2xl font-bold text-gray-800 mb-6">Tải ảnh xác nhận thanh toán</h3>
-
-            <div class="mb-6">
-                <label for="payment_proof_input" class="block text-gray-700 text-sm font-semibold mb-2 text-left">Ảnh xác nhận</label>
-                <input type="file" id="payment_proof_input" accept="image/*" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
-                <p class="text-sm text-gray-500 mt-2 text-left">Chọn ảnh từ thiết bị của bạn.</p>
-            </div>
-
-            <p class="text-red-600 font-semibold mb-6">Lưu ý: Thời gian xử lý giao dịch khoảng 15-20 phút.</p>
-
-            <button id="upload_proof_confirm_btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 active:scale-95">
-                Xác nhận tải lên
-            </button>
-
-            <button id="close_upload_proof_modal_btn" class="mt-4 w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95">
-                Đóng
-            </button>
-        </div>
-    </div>
+    <!-- Removed upload_proof_modal entirely -->
 
     <div id="seat_selection_modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[10002] p-4 hidden opacity-0">
         <div class="bg-white rounded-xl shadow-2xl p-8 max-w-3xl w-full text-center transform scale-95 max-h-[90vh] overflow-y-auto">
@@ -911,8 +891,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
-
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
@@ -926,7 +904,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        const storage = getStorage(app); // Initialize Firebase Storage
 
         let loggedInUser = null;
         let currentUserId = null;
@@ -987,12 +964,6 @@
         const transferContent = document.getElementById('transfer_content');
         const confirmPaymentBtn = document.getElementById('confirm_payment_btn');
         const closePaymentModalBtn = document.getElementById('close_payment_modal_btn');
-
-        const uploadProofModal = document.getElementById('upload_proof_modal');
-        // Changed to file input
-        const paymentProofInput = document.getElementById('payment_proof_input');
-        const uploadProofConfirmBtn = document.getElementById('upload_proof_confirm_btn');
-        const closeUploadProofModalBtn = document.getElementById('close_upload_proof_modal_btn');
 
         const seatSelectionModal = document.getElementById('seat_selection_modal');
         const outboundSeatMapSection = document.getElementById('outbound_seat_map_section');
@@ -1106,7 +1077,7 @@
         const savePaymentSettingsBtn = document.getElementById('save_payment_settings_btn');
 
         const popularDestinationsList = document.getElementById('popular_destinations_list');
-        const departureInput = document.getElementById('departure'); // Thêm dòng này
+        const departureInput = document.getElementById('departure');
         const destinationInput = document.getElementById('destination');
 
         const heroBackground = document.getElementById('hero_background');
@@ -1236,8 +1207,36 @@
             }
         }
 
+        // Listener for authentication state changes
         onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is signed in.
+                const storedUsername = localStorage.getItem('loggedInUsername');
+                if (storedUsername) {
+                    const userProfileDocRef = doc(db, `artifacts/${appId}/users/${storedUsername}/profile/data`);
+                    const userDocSnap = await getDoc(userProfileDocRef);
+                    if (userDocSnap.exists()) {
+                        loggedInUser = { id: storedUsername, ...userDocSnap.data() };
+                        currentUserId = storedUsername;
+                    } else {
+                        // If user data not found in Firestore, clear local storage
+                        localStorage.removeItem('loggedInUsername');
+                        loggedInUser = null;
+                        currentUserId = null;
+                    }
+                } else {
+                    // If no username in local storage, but Firebase auth is ready (e.g., anonymous), handle it
+                    loggedInUser = null;
+                    currentUserId = null;
+                }
+            } else {
+                // User is signed out.
+                localStorage.removeItem('loggedInUsername');
+                loggedInUser = null;
+                currentUserId = null;
+            }
             updateHeaderNav();
+
             // Listen for booking history changes only if logged in and not admin
             if (loggedInUser && !loggedInUser.isAdmin) {
                 onSnapshot(collection(db, `artifacts/${appId}/users/${loggedInUser.username}/bookings`), (snapshot) => {
@@ -1370,6 +1369,40 @@
             renderUnreadCount(); // Update unread count when chat sessions change
         }, (error) => console.error("Error fetching chat sessions:", error));
 
+        // Function to initialize user session from localStorage
+        async function initializeUserSession() {
+            const storedUsername = localStorage.getItem('loggedInUsername');
+            if (storedUsername) {
+                try {
+                    const userProfileDocRef = doc(db, `artifacts/${appId}/users/${storedUsername}/profile/data`);
+                    const userDocSnap = await getDoc(userProfileDocRef);
+                    if (userDocSnap.exists()) {
+                        loggedInUser = { id: storedUsername, ...userDocSnap.data() };
+                        currentUserId = storedUsername;
+                        updateHeaderNav();
+                        // Also re-attach user-specific history listener if needed
+                        onSnapshot(collection(db, `artifacts/${appId}/users/${loggedInUser.username}/bookings`), (snapshot) => {
+                            loggedInUser.history = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                            if (historyModal.classList.contains('modal-enter')) renderBookingHistory();
+                        }, (error) => console.error("Error fetching user history:", error));
+                    } else {
+                        // User data not found in Firestore, clear local storage
+                        localStorage.removeItem('loggedInUsername');
+                        loggedInUser = null;
+                        currentUserId = null;
+                        updateHeaderNav();
+                    }
+                } catch (error) {
+                    console.error("Error initializing user session from localStorage:", error);
+                    localStorage.removeItem('loggedInUsername');
+                    loggedInUser = null;
+                    currentUserId = null;
+                    updateHeaderNav();
+                }
+            }
+        }
+
+
         function updateHeaderNav() {
             if (loggedInUser) {
                 loginStatusBtn.innerText = loggedInUser.username;
@@ -1473,6 +1506,7 @@
                     if (userData.password === password) {
                         loggedInUser = { id: username, ...userData };
                         currentUserId = username;
+                        localStorage.setItem('loggedInUsername', username); // Save username to localStorage
 
                         updateHeaderNav();
                         hideModal(loginRegisterModal);
@@ -1497,6 +1531,7 @@
         function logoutUser() {
             loggedInUser = null;
             currentUserId = null;
+            localStorage.removeItem('loggedInUsername'); // Clear username from localStorage
             updateHeaderNav();
             showCustomAlert('Bạn đã đăng xuất.');
             renderUnreadCount(); // Update unread count after logout
@@ -1523,7 +1558,8 @@
         }
 
         // Event listeners for login/register
-        loginStatusBtn.addEventListener('click', () => {
+        loginStatusBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent default link behavior
             if (!loggedInUser) {
                 showModal(loginRegisterModal);
                 authModalTitle.innerText = 'Đăng nhập';
@@ -1534,8 +1570,9 @@
                 logoutUser();
             }
         });
-        loginStatusBtnMobile.addEventListener('click', () => { // Mobile
-            hideMobileMenu();
+        loginStatusBtnMobile.addEventListener('click', (e) => { // Mobile
+            e.preventDefault(); // Prevent default link behavior
+            closeMobileMenu(); // Ensure mobile menu closes
             if (!loggedInUser) {
                 showModal(loginRegisterModal);
                 authModalTitle.innerText = 'Đăng nhập';
@@ -1584,7 +1621,7 @@
         });
         profileNavLinkMobile.addEventListener('click', (e) => { // Mobile
             e.preventDefault();
-            hideMobileMenu();
+            closeMobileMenu(); // Ensure mobile menu closes
             if (loggedInUser) {
                 profileUsernameInput.value = loggedInUser.username;
                 profileFullnameInput.value = loggedInUser.fullname;
@@ -2112,33 +2149,9 @@
             transferContent.innerText = randomCode;
         });
 
-        confirmPaymentBtn.addEventListener('click', function() {
+        // Updated confirmPaymentBtn to directly confirm payment
+        confirmPaymentBtn.addEventListener('click', async function() {
             hideModal(paymentModal);
-            showModal(uploadProofModal);
-        });
-
-        // 1. Sửa hình ảnh xác nhận thanh toán phải được tải lên từ máy tính hoặc điện thoại
-        uploadProofConfirmBtn.addEventListener('click', async function() {
-            const paymentProofFile = paymentProofInput.files[0]; // Lấy file từ input type="file"
-            let paymentProofUrl = '';
-
-            if (paymentProofFile) {
-                const storageRef = ref(storage, `artifacts/${appId}/payment_proofs/${loggedInUser.username || 'guest'}/${Date.now()}_${paymentProofFile.name}`);
-                try {
-                    const snapshot = await uploadBytes(storageRef, paymentProofFile);
-                    paymentProofUrl = await getDownloadURL(snapshot.ref);
-                    showCustomAlert(`Đã tải ảnh xác nhận lên thành công.\nThời gian xử lý giao dịch khoảng 15-20 phút.`);
-                } catch (error) {
-                    showCustomAlert("Lỗi khi tải ảnh xác nhận lên: " + error.message);
-                    console.error("Lỗi tải ảnh:", error);
-                    return;
-                }
-            } else {
-                showCustomAlert('Vui lòng chọn ảnh xác nhận để tải lên.');
-                return;
-            }
-
-            hideModal(uploadProofModal);
 
             let bookingId = 'BK' + Math.floor(Math.random() * 100000).toString().padStart(5, '0');
             let flightInfo = '';
@@ -2157,12 +2170,12 @@
                 id: bookingId,
                 flightInfo: flightInfo,
                 price: price,
-                status: 'Đang xử lý',
+                status: 'Đặt vé thành công', // Directly set status to 'Đặt vé thành công'
                 bookingDate: formatDate(new Date()),
                 username: loggedInUser ? loggedInUser.username : 'Guest',
                 creatorId: auth.currentUser ? auth.currentUser.uid : 'anonymous',
                 seats: selectedSeatsDisplay,
-                paymentProofUrl: paymentProofUrl // Store the URL
+                paymentProofUrl: 'N/A' // No payment proof URL needed
             };
 
             try {
@@ -2173,7 +2186,7 @@
                 if (loggedInUser && !loggedInUser.isAdmin) {
                     await setDoc(doc(db, `artifacts/${appId}/users/${currentUserId}/bookings`, bookingId), newBooking);
                 }
-                // 2. Cập nhật lịch sử đặt vé khi đặt vé xong
+                showCustomAlert(`Đặt vé thành công! Mã đặt chỗ của bạn là: ${bookingId}`);
                 // Trigger a re-render of booking history if the modal is open
                 if (historyModal.classList.contains('modal-enter')) {
                     renderBookingHistory();
@@ -2181,12 +2194,6 @@
             } catch (error) {
                 showCustomAlert("Lỗi khi lưu thông tin đặt vé: " + error.message);
             }
-
-            paymentProofInput.value = ''; // Clear file input
-        });
-
-        closeUploadProofModalBtn.addEventListener('click', function() {
-            hideModal(uploadProofModal);
         });
 
         closePaymentModalBtn.addEventListener('click', function() {
@@ -2339,7 +2346,7 @@
         });
         historyNavLinkMobile.addEventListener('click', function(e) { // Mobile
             e.preventDefault();
-            hideMobileMenu();
+            closeMobileMenu(); // Ensure mobile menu closes
             if (!loggedInUser) {
                 showCustomAlert("Vui lòng đăng nhập để xem lịch sử đặt vé.");
                 return;
@@ -2398,7 +2405,7 @@
         });
         promotionsNavLinkMobile.addEventListener('click', function(e) { // Mobile
             e.preventDefault();
-            hideMobileMenu();
+            closeMobileMenu(); // Ensure mobile menu closes
             renderPromotions();
             showModal(promotionsModal);
         });
@@ -2472,7 +2479,7 @@
         });
         contactNavLinkMobile.addEventListener('click', function(e) { // Mobile
             e.preventDefault();
-            hideMobileMenu();
+            closeMobileMenu(); // Ensure mobile menu closes
             showModal(contactModal);
         });
 
@@ -2643,9 +2650,9 @@
             showModal(adminSettingsModal);
             showAdminTab('promotions');
         });
-        adminSettingsNavLinkMobile.addEventListener('click', function(e) { // Mobile
+        adminSettingsNavLinkMobile.addEventListener('click', (e) => { // Mobile
             e.preventDefault();
-            hideMobileMenu();
+            closeMobileMenu(); // Ensure mobile menu closes
             if (!loggedInUser || !loggedInUser.isAdmin) {
                 showCustomAlert("Bạn không có quyền truy cập trang này.");
                 return;
@@ -3071,7 +3078,7 @@
                             <p class="text-gray-700 text-sm">Ngày đặt: ${booking.bookingDate}</p>
                             <p class="text-gray-700 text-sm">Giá: ${booking.price}</p>
                             <p class="text-gray-700 text-sm">Ghế đã chọn: ${booking.seats || 'N/A'}</p>
-                            ${booking.paymentProofUrl ? `<div class="mt-2">
+                            ${booking.paymentProofUrl && booking.paymentProofUrl !== 'N/A' ? `<div class="mt-2">
                                 <p class="text-gray-700 text-sm">Ảnh xác nhận thanh toán:</p>
                                 <img src="${booking.paymentProofUrl}" alt="Payment Proof" class="w-32 h-auto rounded-md border border-gray-300 mt-1">
                             </div>` : ''}
@@ -3095,7 +3102,7 @@
             }
         }
 
-        // 3. Sửa lỗi khi admin thay đổi trạng thái đặt vé của tài khoản khác bị lỗi
+        // Sửa lỗi khi admin thay đổi trạng thái đặt vé của tài khoản khác bị lỗi
         async function updateBookingStatus(event) {
             const bookingId = event.target.dataset.id;
             const creatorId = event.target.dataset.userId; // This is the Firebase UID, not username
@@ -3339,26 +3346,39 @@
             updateZoomLevel();
         });
 
-        // 5. Các nút điều hướng ở trên menu trong trang chủ phải được gộp gọn vào một nút menu dạng hamberger.
-        hamburgerMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.add('open');
-            mobileMenuOverlay.classList.remove('hidden');
-        });
+        // Hamburger Menu functionality
+        // Đảm bảo các phần tử này được tìm thấy trong DOM trước khi thêm trình nghe sự kiện
+        if (hamburgerMenuBtn) {
+            hamburgerMenuBtn.addEventListener('click', () => {
+                if (mobileMenu) mobileMenu.classList.add('open');
+                if (mobileMenuOverlay) mobileMenuOverlay.classList.remove('hidden');
+            });
+        } else {
+            console.error("Lỗi: Không tìm thấy nút menu hamburger!");
+        }
 
-        closeMobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.remove('open');
-            mobileMenuOverlay.classList.add('hidden');
-        });
+        if (closeMobileMenuBtn) {
+            closeMobileMenuBtn.addEventListener('click', () => {
+                if (mobileMenu) mobileMenu.classList.remove('open');
+                if (mobileMenuOverlay) mobileMenuOverlay.classList.add('hidden');
+            });
+        } else {
+            console.error("Lỗi: Không tìm thấy nút đóng menu di động!");
+        }
 
-        mobileMenuOverlay.addEventListener('click', () => {
-            mobileMenu.classList.remove('open');
-            mobileMenuOverlay.classList.add('hidden');
-        });
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', () => {
+                if (mobileMenu) mobileMenu.classList.remove('open');
+                if (mobileMenuOverlay) mobileMenuOverlay.classList.add('hidden');
+            });
+        } else {
+            console.error("Lỗi: Không tìm thấy lớp phủ menu di động!");
+        }
 
         // Function to close mobile menu after a navigation item is clicked
         function closeMobileMenu() {
-            mobileMenu.classList.remove('open');
-            mobileMenuOverlay.classList.add('hidden');
+            if (mobileMenu) mobileMenu.classList.remove('open');
+            if (mobileMenuOverlay) mobileMenuOverlay.classList.add('hidden');
         }
 
         // Add closeMobileMenu to all mobile navigation links
@@ -3371,6 +3391,7 @@
         authenticateUser();
         applyAdvertisementSettings(); // Apply initial advertisement settings
         updateZoomLevel(); // Set initial zoom level
+        initializeUserSession(); // Initialize user session from localStorage on page load
     </script>
 </body>
 </html>

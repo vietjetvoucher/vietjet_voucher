@@ -778,6 +778,7 @@
                 <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="promotions">Quản lý Khuyến mại</button>
                 <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="vouchers">Quản lý Voucher</button>
                 <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="destinations">Quản lý Điểm đến</button>
+                <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="flights">Quản lý Chuyến bay</button>
                 <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="all_history">Lịch sử Khách hàng</button>
                 <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="advertisement">Cài đặt Quảng cáo</button>
                 <button class="px-4 py-2 text-lg font-medium text-gray-700 border-b-2 border-transparent hover:border-blue-500 focus:outline-none admin-tab-btn whitespace-nowrap" data-tab="messages">Quản lý Tin nhắn</button>
@@ -803,6 +804,53 @@
                 <div id="admin_destinations_list" class="space-y-4 mb-6">
                 </div>
                 <button id="add_destination_btn" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg">Thêm Điểm đến mới</button>
+            </div>
+
+            <div id="admin_flights_tab" class="admin-tab-content hidden">
+                <h4 class="text-xl font-semibold mb-4">Quản lý Chuyến bay</h4>
+                <div class="mb-6 p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <h5 class="text-lg font-semibold mb-3">Thêm/Sửa Chuyến bay</h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="flight_id_input" class="block text-gray-700 text-sm font-semibold mb-2">Mã chuyến bay</label>
+                            <input type="text" id="flight_id_input" placeholder="VD: VJ123" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 text-gray-900">
+                        </div>
+                        <div>
+                            <label for="flight_departure_input" class="block text-gray-700 text-sm font-semibold mb-2">Điểm đi</label>
+                            <input type="text" id="flight_departure_input" list="airport_list_admin_departure" placeholder="Chọn điểm đi" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 text-gray-900">
+                            <datalist id="airport_list_admin_departure"></datalist>
+                        </div>
+                        <div>
+                            <label for="flight_destination_input" class="block text-gray-700 text-sm font-semibold mb-2">Điểm đến</label>
+                            <input type="text" id="flight_destination_input" list="airport_list_admin_destination" placeholder="Chọn điểm đến" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 text-gray-900">
+                            <datalist id="airport_list_admin_destination"></datalist>
+                        </div>
+                        <div>
+                            <label for="flight_depart_time_input" class="block text-gray-700 text-sm font-semibold mb-2">Giờ khởi hành (HH:MM)</label>
+                            <input type="time" id="flight_depart_time_input" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 text-gray-900">
+                        </div>
+                        <div>
+                            <label for="flight_arrive_time_input" class="block text-gray-700 text-sm font-semibold mb-2">Giờ đến (HH:MM)</label>
+                            <input type="time" id="flight_arrive_time_input" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 text-gray-900">
+                        </div>
+                        <div>
+                            <label for="flight_duration_input" class="block text-gray-700 text-sm font-semibold mb-2">Thời lượng bay (VD: 2h30m)</label>
+                            <input type="text" id="flight_duration_input" placeholder="VD: 2h30m" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 text-gray-900">
+                        </div>
+                        <div>
+                            <label for="flight_price_input" class="block text-gray-700 text-sm font-semibold mb-2">Giá vé cơ bản (VNĐ)</label>
+                            <input type="number" id="flight_price_input" placeholder="VD: 1230000" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 text-gray-900">
+                        </div>
+                    </div>
+                    <p id="flight_form_error_message" class="text-red-500 text-sm mt-2 hidden"></p>
+                    <button id="add_flight_btn" class="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg">Thêm Chuyến bay</button>
+                    <button id="update_flight_btn" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hidden">Cập nhật Chuyến bay</button>
+                    <button id="cancel_edit_flight_btn" class="mt-4 bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg hidden">Hủy</button>
+                </div>
+                <h4 class="text-xl font-semibold mb-4">Danh sách Chuyến bay đã tạo</h4>
+                <div id="admin_flights_list" class="space-y-4 mb-6">
+                    <p class="text-center text-gray-600">Chưa có chuyến bay nào được tạo.</p>
+                </div>
             </div>
 
             <div id="admin_all_history_tab" class="admin-tab-content hidden">
@@ -913,10 +961,12 @@
         let promotionsDataCache = [];
         let domesticAirportsDataCache = [];
         let vouchersDataCache = [];
+        let flightsDataCache = []; // New cache for admin-defined flights
         let appSettingsCache = {};
         let paymentDetailsCache = {};
         let chatSessionsCache = [];
         let currentOpenChatId = null;
+        let currentEditingFlightId = null; // To track which flight is being edited
 
         const flightTypeRadios = document.querySelectorAll('input[name="flight_type"]');
         const returnDateField = document.getElementById('return_date_field');
@@ -1048,6 +1098,7 @@
         const adminPromotionsTab = document.getElementById('admin_promotions_tab');
         const adminVouchersTab = document.getElementById('admin_vouchers_tab');
         const adminDestinationsTab = document.getElementById('admin_destinations_tab');
+        const adminFlightsTab = document.getElementById('admin_flights_tab'); // New tab for flights
         const adminAllHistoryTab = document.getElementById('admin_all_history_tab');
         const adminAdvertisementTab = document.getElementById('admin_advertisement_tab');
         const adminMessagesTab = document.getElementById('admin_messages_tab');
@@ -1056,11 +1107,27 @@
         const adminPromotionsList = document.getElementById('admin_promotions_list');
         const adminVouchersList = document.getElementById('admin_vouchers_list');
         const adminDestinationsList = document.getElementById('admin_destinations_list');
-        const adminAllHistoryList = document.getElementById('admin_all_history_list');
+        const adminFlightsList = document.getElementById('admin_flights_list'); // List for admin flights
         const noAllHistoryMessage = document.getElementById('no_all_history_message');
         const addPromotionBtn = document.getElementById('add_promotion_btn');
         const addVoucherBtn = document.getElementById('add_voucher_btn');
         const addDestinationBtn = document.getElementById('add_destination_btn');
+
+        // Flight management form elements
+        const flightIdInput = document.getElementById('flight_id_input');
+        const flightDepartureInput = document.getElementById('flight_departure_input');
+        const flightDestinationInput = document.getElementById('flight_destination_input');
+        const flightDepartTimeInput = document.getElementById('flight_depart_time_input');
+        const flightArriveTimeInput = document.getElementById('flight_arrive_time_input');
+        const flightDurationInput = document.getElementById('flight_duration_input');
+        const flightPriceInput = document.getElementById('flight_price_input');
+        const flightFormErrorMessage = document.getElementById('flight_form_error_message');
+        const addFlightBtn = document.getElementById('add_flight_btn');
+        const updateFlightBtn = document.getElementById('update_flight_btn');
+        const cancelEditFlightBtn = document.getElementById('cancel_edit_flight_btn');
+        const airportListAdminDeparture = document.getElementById('airport_list_admin_departure');
+        const airportListAdminDestination = document.getElementById('airport_list_admin_destination');
+
 
         const adminChatList = document.getElementById('admin_chat_list');
         const adminChatConversation = document.getElementById('admin_chat_conversation');
@@ -1311,6 +1378,8 @@
             domesticAirportsDataCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             updateAirportDatalists();
             renderPopularDestinations();
+            // Update airport datalists for admin flight management
+            updateAdminFlightAirportDatalists();
         }, (error) => console.error("Error fetching airports:", error));
 
         onSnapshot(collection(db, `artifacts/${appId}/public/data/vouchers`), (snapshot) => {
@@ -1319,6 +1388,14 @@
                 renderAdminVouchers();
             }
         }, (error) => console.error("Error fetching vouchers:", error));
+
+        // New onSnapshot for flights data
+        onSnapshot(collection(db, `artifacts/${appId}/public/data/flights`), (snapshot) => {
+            flightsDataCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            if (adminSettingsModal.classList.contains('modal-enter') && document.querySelector('.admin-tab-btn.border-blue-500')?.dataset.tab === 'flights') {
+                renderAdminFlights();
+            }
+        }, (error) => console.error("Error fetching flights:", error));
 
         onSnapshot(collection(db, `artifacts/${appId}/public/data/allBookingHistory`), (snapshot) => {
             allBookingHistoryCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -1462,7 +1539,7 @@
                     return;
                 }
 
-                const isAdminUser = (username === 'admin@vietjet.com');
+                const isAdminUser = (username === 'dimensiongsv@gmail.com');
 
                 await setDoc(userProfileDocRef, {
                     username,
@@ -1760,7 +1837,7 @@
 
 
         const searchForm = document.querySelector('form');
-        searchForm.addEventListener('submit', function(event) {
+        searchForm.addEventListener('submit', async function(event) {
             event.preventDefault();
 
             // 4. Khi tìm chuyến bay mà chưa đăng nhập thì hiện form đăng nhập
@@ -1799,7 +1876,16 @@
             tempSelectedOutboundFlight = null;
             tempSelectedReturnFlight = null;
 
-            setTimeout(() => {
+            try {
+                // Fetch flights from Firestore based on departure and destination
+                const flightsQuery = query(
+                    collection(db, `artifacts/${appId}/public/data/flights`),
+                    where("departure", "==", departure),
+                    where("destination", "==", destination)
+                );
+                const flightsSnapshot = await getDocs(flightsQuery);
+                const availableFlights = flightsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
                 let summary = `Điểm đi: ${departure} - Điểm đến: ${destination}<br>`;
                 summary += `Ngày đi: ${departDate}`;
                 if (flightType === 'round_trip') {
@@ -1809,22 +1895,15 @@
                 searchSummary.innerHTML = summary;
 
                 const passengersForPricing = adultPassengers + childPassengers;
-                const basePricePerTicket = getAirportBasePrice(departure);
 
                 if (flightType === 'one_way') {
                     roundTripFlightsSection.classList.add('hidden');
                     oneWayFlightList.classList.remove('hidden');
 
-                    const simulatedOneWayFlights = [
-                        { id: 'VJ123', airline: 'Vietjet Air', departTime: '07:00', arriveTime: '09:00', rawPrice: basePricePerTicket, duration: '2h00m', flightDate: departDate, flightTime: '07:00' },
-                        { id: 'VJ456', airline: 'Vietjet Air', departTime: '10:30', arriveTime: '12:30', rawPrice: basePricePerTicket + 250000, duration: '2h00m', flightDate: departDate, flightTime: '10:30' },
-                        { id: 'VJ789', airline: 'Vietjet Air', departTime: '14:00', arriveTime: '16:00', rawPrice: basePricePerTicket - 150000, duration: '2h00m', flightDate: departDate, flightTime: '14:00' }
-                    ];
-
-                    if (simulatedOneWayFlights.length > 0) {
-                        simulatedOneWayFlights.forEach(flight => {
+                    if (availableFlights.length > 0) {
+                        availableFlights.forEach(flight => {
                             const promotionDiscount = getPromotionDiscount(destination.split(' ')[0]);
-                            const originalTotalPrice = flight.rawPrice * passengersForPricing;
+                            const originalTotalPrice = flight.price * passengersForPricing;
                             const finalTotalPrice = originalTotalPrice * (1 - promotionDiscount / 100);
 
                             const flightCard = document.createElement('div');
@@ -1834,7 +1913,7 @@
                                     <img src="https://placehold.co/50x50/FF0000/FFFFFF?text=VJ" alt="Vietjet Logo" class="h-12 w-12 rounded-full">
                                     <div>
                                         <p class="text-xl font-bold text-gray-900">${flight.id}</p>
-                                        <p class="text-sm text-gray-600">${flight.airline}</p>
+                                        <p class="text-sm text-gray-600">Vietjet Air</p>
                                     </div>
                                 </div>
                                 <div class="text-center md:text-left mb-4 md:mb-0">
@@ -1852,7 +1931,8 @@
                                             data-final-price="${finalTotalPrice}"
                                             data-flight-depart-time="${flight.departTime}"
                                             data-flight-arrive-time="${flight.arriveTime}"
-                                            data-flight-date="${flight.flightDate}"
+                                            data-flight-duration="${flight.duration}"
+                                            data-flight-date="${departDate}"
                                             data-flight-time="${flight.departTime}">
                                         Chọn chuyến bay
                                     </button>
@@ -1872,6 +1952,7 @@
                                     finalPrice: parseFloat(this.dataset.finalPrice),
                                     departTime: this.dataset.flightDepartTime,
                                     arriveTime: this.dataset.flightArriveTime,
+                                    duration: this.dataset.flightDuration,
                                     flightDate: this.dataset.flightDate,
                                     flightTime: this.dataset.flightTime,
                                     seat: 'N/A'
@@ -1885,23 +1966,25 @@
                         noFlightsMessage.innerText = "Không tìm thấy chuyến bay nào phù hợp.";
                     }
 
-                } else {
+                } else { // Round trip
                     oneWayFlightList.classList.add('hidden');
                     roundTripFlightsSection.classList.remove('hidden');
                     roundTripSelectionMessage.classList.remove('hidden');
 
-                    const simulatedOutboundFlights = [
-                        { id: 'VJ123', airline: 'Vietjet Air', departTime: '07:00', arriveTime: '09:00', rawPrice: basePricePerTicket, duration: '2h00m', flightDate: departDate, flightTime: '07:00' },
-                        { id: 'VJ456', airline: 'Vietjet Air', departTime: '10:30', arriveTime: '12:30', rawPrice: basePricePerTicket + 200000, duration: '2h00m', flightDate: departDate, flightTime: '10:30' }
-                    ];
-                    const simulatedReturnFlights = [
-                        { id: 'VJ124', airline: 'Vietjet Air', departTime: '18:00', arriveTime: '20:00', rawPrice: basePricePerTicket - 50000, duration: '2h00m', flightDate: returnDate, flightTime: '18:00' },
-                        { id: 'VJ457', airline: 'Vietjet Air', departTime: '20:00', arriveTime: '22:00', rawPrice: basePricePerTicket + 50000, duration: '2h00m', flightDate: returnDate, flightTime: '20:00' }
-                    ];
+                    const outboundFlights = availableFlights; // Use fetched flights for outbound
+                    // For return flights, swap departure and destination
+                    const returnFlightsQuery = query(
+                        collection(db, `artifacts/${appId}/public/data/flights`),
+                        where("departure", "==", destination), // Destination becomes departure for return
+                        where("destination", "==", departure) // Departure becomes destination for return
+                    );
+                    const returnFlightsSnapshot = await getDocs(returnFlightsQuery);
+                    const availableReturnFlights = returnFlightsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-                    if (simulatedOutboundFlights.length > 0) {
-                        simulatedOutboundFlights.forEach(flight => {
-                            const totalPrice = flight.rawPrice * passengersForPricing;
+
+                    if (outboundFlights.length > 0) {
+                        outboundFlights.forEach(flight => {
+                            const totalPrice = flight.price * passengersForPricing;
                             const flightCard = document.createElement('div');
                             flightCard.className = 'flight-card bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row justify-between items-center transition duration-300 hover:shadow-lg';
                             flightCard.innerHTML = `
@@ -1909,7 +1992,7 @@
                                     <img src="https://placehold.co/50x50/FF0000/FFFFFF?text=VJ" alt="Vietjet Logo" class="h-12 w-12 rounded-full">
                                     <div>
                                         <p class="text-xl font-bold text-gray-900">${flight.id}</p>
-                                        <p class="text-sm text-gray-600">${flight.airline}</p>
+                                        <p class="text-sm text-gray-600">Vietjet Air</p>
                                     </div>
                                 </div>
                                 <div class="text-center md:text-left mb-4 md:mb-0">
@@ -1924,7 +2007,8 @@
                                             data-flight-price="${totalPrice}"
                                             data-flight-depart-time="${flight.departTime}"
                                             data-flight-arrive-time="${flight.arriveTime}"
-                                            data-flight-date="${flight.flightDate}"
+                                            data-flight-duration="${flight.duration}"
+                                            data-flight-date="${departDate}"
                                             data-flight-time="${flight.departTime}">
                                         Chọn chuyến đi
                                     </button>
@@ -1936,9 +2020,9 @@
                         outboundFlightsList.innerHTML = '<p class="text-center text-gray-600">Không tìm thấy chuyến đi nào phù hợp.</p>';
                     }
 
-                    if (simulatedReturnFlights.length > 0) {
-                        simulatedReturnFlights.forEach(flight => {
-                            const totalPrice = flight.rawPrice * passengersForPricing;
+                    if (availableReturnFlights.length > 0) {
+                        availableReturnFlights.forEach(flight => {
+                            const totalPrice = flight.price * passengersForPricing;
                             const flightCard = document.createElement('div');
                             flightCard.className = 'flight-card bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row justify-between items-center transition duration-300 hover:shadow-lg';
                             flightCard.innerHTML = `
@@ -1946,7 +2030,7 @@
                                     <img src="https://placehold.co/50x50/FF0000/FFFFFF?text=VJ" alt="Vietjet Logo" class="h-12 w-12 rounded-full">
                                     <div>
                                         <p class="text-xl font-bold text-gray-900">${flight.id}</p>
-                                        <p class="text-sm text-gray-600">${flight.airline}</p>
+                                        <p class="text-sm text-gray-600">Vietjet Air</p>
                                     </div>
                                 </div>
                                 <div class="text-center md:text-left mb-4 md:mb-0">
@@ -1961,7 +2045,8 @@
                                             data-flight-price="${totalPrice}"
                                             data-flight-depart-time="${flight.departTime}"
                                             data-flight-arrive-time="${flight.arriveTime}"
-                                            data-flight-date="${flight.flightDate}"
+                                            data-flight-duration="${flight.duration}"
+                                            data-flight-date="${returnDate}"
                                             data-flight-time="${flight.departTime}">
                                         Chọn chuyến về
                                     </button>
@@ -1981,6 +2066,7 @@
                                 price: parseFloat(this.dataset.flightPrice),
                                 departTime: this.dataset.flightDepartTime,
                                 arriveTime: this.dataset.flightArriveTime,
+                                duration: this.dataset.flightDuration,
                                 flightDate: this.dataset.flightDate,
                                 flightTime: this.dataset.flightTime,
                                 seat: 'N/A'
@@ -2001,11 +2087,15 @@
 
                 showModal(flightResultsModal);
 
+            } catch (error) {
+                showCustomAlert("Lỗi khi tìm kiếm chuyến bay: " + error.message);
+                console.error("Error searching flights:", error);
+            } finally {
                 searchButtonText.classList.remove('hidden');
                 searchSpinner.classList.add('hidden');
                 searchFlightBtn.disabled = false;
                 searchFlightBtn.classList.remove('cursor-not-allowed', 'opacity-75');
-            }, 1500);
+            }
         });
 
         function checkRoundTripSelectionComplete() {
@@ -2027,7 +2117,7 @@
                 const returnPriceAfterPromo = tempSelectedReturnFlight.price * (1 - returnPromoDiscount / 100);
 
                 const originalCombinedPrice = outboundPriceAfterPromo + returnPriceAfterPromo;
-                const discountedCombinedPrice = originalCombinedPrice * 0.8;
+                const discountedCombinedPrice = originalCombinedPrice * 0.8; // Example: 20% discount for round trip
 
                 currentSelectedFlight = {
                     type: 'round_trip',
@@ -2173,7 +2263,7 @@
                 status: 'Đặt vé thành công', // Directly set status to 'Đặt vé thành công'
                 bookingDate: formatDate(new Date()),
                 username: loggedInUser ? loggedInUser.username : 'Guest',
-                creatorId: auth.currentUser ? auth.currentUser.uid : 'anonymous',
+                creatorId: auth.currentUser ? auth.currentUser.uid : 'anonymous', // Use Firebase UID for creatorId
                 seats: selectedSeatsDisplay,
                 paymentProofUrl: 'N/A' // No payment proof URL needed
             };
@@ -2524,7 +2614,7 @@
                     fileDisplay = `<p class="font-semibold">Tệp: ${file.name}</p>`;
                 }
                 messageDiv.innerHTML = `
-                    <div class="bg-green-100 text-green-800 p-3 rounded-lg max-w-[70%] shadow-sm">
+                    <div class="bg-blue-100 text-blue-800 p-3 rounded-lg max-w-[70%] shadow-sm">
                         ${fileDisplay}
                         <p class="text-sm text-gray-600 mt-1">Đã gửi tệp đính kèm.</p>
                     </div>
@@ -2605,7 +2695,8 @@
                 messageDiv.className = `flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`;
                 messageDiv.innerHTML = `
                     <div class="${msg.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'} p-3 rounded-lg max-w-[70%] shadow-md">
-                        ${msg.text}
+                        <p>${msg.text}</p>
+                        <p class="text-xs text-gray-500 mt-1">${new Date(msg.timestamp).toLocaleString('vi-VN')}</p>
                     </div>
                 `;
                 chatMessages.appendChild(messageDiv);
@@ -2690,6 +2781,8 @@
                 renderAdminVouchers();
             } else if (tabName === 'destinations') {
                 renderAdminDestinations();
+            } else if (tabName === 'flights') { // New tab for flights
+                renderAdminFlights();
             } else if (tabName === 'all_history') {
                 renderAdminAllHistory();
             } else if (tabName === 'advertisement') {
@@ -3051,6 +3144,186 @@
             });
         }
 
+        function updateAdminFlightAirportDatalists() {
+            airportListAdminDeparture.innerHTML = '';
+            airportListAdminDestination.innerHTML = '';
+
+            domesticAirportsDataCache.forEach(airport => {
+                const option1 = document.createElement('option');
+                option1.value = airport.name;
+                airportListAdminDeparture.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = airport.name;
+                airportListAdminDestination.appendChild(option2);
+            });
+        }
+
+        // New functions for Flight Management (Admin)
+        function renderAdminFlights() {
+            adminFlightsList.innerHTML = '';
+            if (flightsDataCache.length === 0) {
+                adminFlightsList.innerHTML = '<p class="text-center text-gray-600">Chưa có chuyến bay nào được tạo.</p>';
+                return;
+            }
+            flightsDataCache.forEach(flight => {
+                const flightCard = document.createElement('div');
+                flightCard.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex items-center justify-between';
+                flightCard.innerHTML = `
+                    <div>
+                        <p class="font-semibold text-lg">Mã chuyến bay: ${flight.id}</p>
+                        <p class="text-gray-600 text-sm">Điểm đi: ${flight.departure} - Điểm đến: ${flight.destination}</p>
+                        <p class="text-gray-600 text-sm">Thời gian: ${flight.departTime} - ${flight.arriveTime} (${flight.duration})</p>
+                        <p class="text-gray-600 text-sm">Giá vé: ${flight.price.toLocaleString('vi-VN')} VNĐ</p>
+                    </div>
+                    <div>
+                        <button class="edit-flight-btn bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md text-sm mr-2" data-id="${flight.id}">Sửa</button>
+                        <button class="delete-flight-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm" data-id="${flight.id}">Xóa</button>
+                    </div>
+                `;
+                adminFlightsList.appendChild(flightCard);
+            });
+
+            document.querySelectorAll('.edit-flight-btn').forEach(btn => btn.addEventListener('click', editFlight));
+            document.querySelectorAll('.delete-flight-btn').forEach(btn => btn.addEventListener('click', deleteFlight));
+        }
+
+        addFlightBtn.addEventListener('click', async () => {
+            const id = flightIdInput.value.trim();
+            const departure = flightDepartureInput.value.trim();
+            const destination = flightDestinationInput.value.trim();
+            const departTime = flightDepartTimeInput.value.trim();
+            const arriveTime = flightArriveTimeInput.value.trim();
+            const duration = flightDurationInput.value.trim();
+            const price = parseFloat(flightPriceInput.value);
+
+            if (!id || !departure || !destination || !departTime || !arriveTime || !duration || isNaN(price) || price <= 0) {
+                flightFormErrorMessage.innerText = 'Vui lòng điền đầy đủ và chính xác thông tin chuyến bay.';
+                flightFormErrorMessage.classList.remove('hidden');
+                return;
+            }
+
+            // Check if flight ID already exists for adding
+            if (flightsDataCache.some(f => f.id === id)) {
+                flightFormErrorMessage.innerText = 'Mã chuyến bay đã tồn tại. Vui lòng chọn mã khác.';
+                flightFormErrorMessage.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                await setDoc(doc(db, `artifacts/${appId}/public/data/flights`, id), {
+                    id,
+                    departure,
+                    destination,
+                    departTime,
+                    arriveTime,
+                    duration,
+                    price
+                });
+                showCustomAlert("Đã thêm chuyến bay mới.");
+                clearFlightForm();
+                flightFormErrorMessage.classList.add('hidden');
+            } catch (error) {
+                showCustomAlert("Lỗi khi thêm chuyến bay: " + error.message);
+                console.error("Error adding flight:", error);
+            }
+        });
+
+        updateFlightBtn.addEventListener('click', async () => {
+            const id = currentEditingFlightId; // Use the ID of the flight being edited
+            const departure = flightDepartureInput.value.trim();
+            const destination = flightDestinationInput.value.trim();
+            const departTime = flightDepartTimeInput.value.trim();
+            const arriveTime = flightArriveTimeInput.value.trim();
+            const duration = flightDurationInput.value.trim();
+            const price = parseFloat(flightPriceInput.value);
+
+            if (!id || !departure || !destination || !departTime || !arriveTime || !duration || isNaN(price) || price <= 0) {
+                flightFormErrorMessage.innerText = 'Vui lòng điền đầy đủ và chính xác thông tin chuyến bay.';
+                flightFormErrorMessage.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, `artifacts/${appId}/public/data/flights`, id), {
+                    departure,
+                    destination,
+                    departTime,
+                    arriveTime,
+                    duration,
+                    price
+                });
+                showCustomAlert("Đã cập nhật chuyến bay.");
+                clearFlightForm();
+                flightFormErrorMessage.classList.add('hidden');
+                addFlightBtn.classList.remove('hidden');
+                updateFlightBtn.classList.add('hidden');
+                cancelEditFlightBtn.classList.add('hidden');
+                flightIdInput.readOnly = false; // Make ID editable again
+            } catch (error) {
+                showCustomAlert("Lỗi khi cập nhật chuyến bay: " + error.message);
+                console.error("Error updating flight:", error);
+            }
+        });
+
+        cancelEditFlightBtn.addEventListener('click', () => {
+            clearFlightForm();
+            flightFormErrorMessage.classList.add('hidden');
+            addFlightBtn.classList.remove('hidden');
+            updateFlightBtn.classList.add('hidden');
+            cancelEditFlightBtn.classList.add('hidden');
+            flightIdInput.readOnly = false; // Make ID editable again
+            currentEditingFlightId = null;
+        });
+
+        function editFlight(event) {
+            const id = event.target.dataset.id;
+            const flight = flightsDataCache.find(f => f.id === id);
+            if (!flight) return;
+
+            currentEditingFlightId = id;
+            flightIdInput.value = flight.id;
+            flightIdInput.readOnly = true; // Prevent editing ID
+            flightDepartureInput.value = flight.departure;
+            flightDestinationInput.value = flight.destination;
+            flightDepartTimeInput.value = flight.departTime;
+            flightArriveTimeInput.value = flight.arriveTime;
+            flightDurationInput.value = flight.duration;
+            flightPriceInput.value = flight.price;
+
+            addFlightBtn.classList.add('hidden');
+            updateFlightBtn.classList.remove('hidden');
+            cancelEditFlightBtn.classList.remove('hidden');
+            flightFormErrorMessage.classList.add('hidden');
+        }
+
+        async function deleteFlight(event) {
+            const id = event.target.dataset.id;
+            const flight = flightsDataCache.find(f => f.id === id);
+            if (!flight) return;
+
+            if (confirm(`Bạn có chắc chắn muốn xóa chuyến bay "${flight.id}" (${flight.departure} - ${flight.destination})?`)) {
+                try {
+                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/flights`, id));
+                    showCustomAlert("Đã xóa chuyến bay.");
+                } catch (error) {
+                    showCustomAlert("Lỗi khi xóa chuyến bay: " + error.message);
+                    console.error("Error deleting flight:", error);
+                }
+            }
+        }
+
+        function clearFlightForm() {
+            flightIdInput.value = '';
+            flightDepartureInput.value = '';
+            flightDestinationInput.value = '';
+            flightDepartTimeInput.value = '';
+            flightArriveTimeInput.value = '';
+            flightDurationInput.value = '';
+            flightPriceInput.value = '';
+        }
+
+
         function renderAdminAllHistory() {
             adminAllHistoryList.innerHTML = '';
             if (allBookingHistoryCache.length === 0) {
@@ -3184,7 +3457,7 @@
 
         function renderAdminChatList() {
             adminChatList.innerHTML = '';
-            adminChatConversation.classList.add('hidden');
+            adminChatConversation.classList.add('hidden'); // Ensure conversation view is hidden by default
             if (chatSessionsCache.length === 0) {
                 adminChatList.innerHTML = '<p class="text-center text-gray-600">Chưa có tin nhắn nào từ khách hàng.</p>';
                 return;

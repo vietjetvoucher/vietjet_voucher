@@ -6,11 +6,18 @@
     <title>Vietjet Air - Đặt Vé Máy Bay Giá Rẻ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Thiết lập font cho toàn bộ body */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f0f2f5;
+            background-size: cover; /* Đảm bảo hình nền bao phủ toàn bộ */
+            background-repeat: no-repeat; /* Không lặp lại hình nền */
+            background-position: center; /* Căn giữa hình nền */
+            background-attachment: fixed; /* Giữ hình nền cố định khi cuộn */
+            transform-origin: top left; /* Đặt gốc biến đổi cho chức năng zoom */
         }
         /* Tùy chỉnh thanh cuộn */
         ::-webkit-scrollbar {
@@ -125,7 +132,7 @@
         @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
-            10% { transform: translateY(0px); }
+            100% { transform: translateY(0px); }
         }
         /* Container cho icon nổi */
         .floating-icon-container {
@@ -133,8 +140,8 @@
             bottom: 40px;
             right: 20px;
             z-index: 100;
-            width: 150px;
-            height: 150px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             box-shadow: 0 4px 12px rgba(0,0,0,0.0.5);
             cursor: pointer;
@@ -167,24 +174,20 @@
         }
         /* Ảnh nền cho phần hero */
         #hero_background {
+            /* Loại bỏ các thuộc tính background-image, width, height, inset */
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
             position: absolute;
-            inset: 0;
-            width: 0%;
-            height: 0%;
-            z-index: -1; /* Đảm bảo nó nằm sau nội dung */
+            z-index: -2; /* Đảm bảo nó nằm sau nội dung */
         }
         /* Ảnh nền cho phần điểm đến nổi bật */
         #popular_destinations_background {
+            /* Loại bỏ các thuộc tính background-image, width, height, inset */
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
             position: absolute;
-            inset: 0;
-            width: 0%;
-            height: 0%;
             z-index: -1;
         }
         /* Form tìm kiếm chuyến bay */
@@ -214,7 +217,21 @@
         }
         /* Đảm bảo các card điểm đến cũng có độ trong suốt */
         #popular_destinations_list .bg-white {
-            background-color: rgba(255, 255, 255, 0.01);
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        /* CSS cho thanh MENU (giảm 3/4 kích thước) */
+        .nav-menu-item {
+            font-size: 0.75em; /* Giảm 25% so với kích thước ban đầu */
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            transition: transform 0.3s ease-out;
+            transform: translateX(100%);
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
         }
     </style>
 </head>
@@ -228,30 +245,66 @@
                 <span class="ml-4 text-2xl font-bold text-red-500">Vietjet Air</span>
             </div>
             <ul class="hidden md:flex space-x-8 text-lg font-medium">
-                <li><a href="#" class="text-gray-700 hover:text-red-500 transition duration-300">Trang chủ</a></li>
-                <li><a href="https://www.vietjetair.com/vi?utm_source=google-vj-vi&utm_medium=cpc&utm_campaign=ada_awoq12025_kw_rsa_0125awo_brand_name_awoq42024_cpa" class="text-gray-700 hover:text-red-500 transition duration-300" target="_blank">Trang chính</a></li>
-                <li><a href="#" id="history_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300">Lịch sử</a></li>
-                <li><a href="#" id="promotions_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300">Khuyến mại</a></li>
-                <li><a href="#why_choose_us" class="text-gray-700 hover:text-red-500 transition duration-300">Dịch vụ</a></li>
-                <li><a href="#" id="contact_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300">Liên hệ</a></li>
-                <li id="profile_nav_item" class="hidden"><a href="#" id="profile_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300">Hồ sơ</a></li>
-                <li id="admin_settings_nav_item" class="hidden"><a href="#" id="admin_settings_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300">Cài đặt Quản trị</a></li>
+                <li><a href="#" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item">Trang chủ</a></li>
+                <li><a href="https://www.vietjetair.com/vi?utm_source=google-vj-vi&utm_medium=cpc&utm_campaign=ada_awoq12025_kw_rsa_0125awo_brand_name_awoq42024_cpa" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item" target="_blank">Trang chính</a></li>
+                <li><a href="#" id="history_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item">Lịch sử</a></li>
+                <li><a href="#" id="promotions_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item">Khuyến mại</a></li>
+                <li><a href="#why_choose_us" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item">Dịch vụ</a></li>
+                <li><a href="#" id="contact_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item">Liên hệ</a></li>
+                <li id="profile_nav_item" class="hidden"><a href="#" id="profile_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item">Hồ sơ</a></li>
+                <li id="admin_settings_nav_item" class="hidden"><a href="#" id="admin_settings_nav_link" class="text-gray-700 hover:text-red-500 transition duration-300 nav-menu-item">Cài đặt Quản trị</a></li>
             </ul>
-            <div class="hidden md:block">
-                <button id="login_status_btn" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-full shadow-lg transition duration-300 transform hover:scale-105 active:scale-95">
-                    Đăng nhập
-                </button>
+            <div class="flex items-center space-x-4">
+                <!-- Zoom Controls -->
+                <div class="hidden md:flex items-center space-x-2">
+                    <button id="zoom_out_btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded-full text-sm">-</button>
+                    <span id="zoom_level_display" class="text-gray-700 text-sm">100%</span>
+                    <button id="zoom_in_btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded-full text-sm">+</button>
+                </div>
+                <div class="hidden md:block">
+                    <button id="login_status_btn" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-full shadow-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                        Đăng nhập
+                    </button>
+                </div>
             </div>
-            <button class="md:hidden text-gray-700 focus:outline-none">
+            <!-- Hamburger Menu for Mobile -->
+            <button id="hamburger_menu_btn" class="md:hidden text-gray-700 focus:outline-none">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
         </nav>
     </header>
 
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile_menu_overlay" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-[9998] hidden"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile_menu" class="fixed top-0 right-0 w-64 h-full bg-white shadow-lg z-[9999] mobile-menu">
+        <div class="flex justify-end p-4">
+            <button id="close_mobile_menu_btn" class="text-gray-700 focus:outline-none">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <ul class="flex flex-col space-y-4 p-4 text-lg font-medium">
+            <li><a href="#" class="block text-gray-700 hover:text-red-500 transition duration-300">Trang chủ</a></li>
+            <li><a href="https://www.vietjetair.com/vi?utm_source=google-vj-vi&utm_medium=cpc&utm_campaign=ada_awoq12025_kw_rsa_0125awo_brand_name_awoq42024_cpa" class="block text-gray-700 hover:text-red-500 transition duration-300" target="_blank">Trang chính</a></li>
+            <li><a href="#" id="history_nav_link_mobile" class="block text-gray-700 hover:text-red-500 transition duration-300">Lịch sử</a></li>
+            <li><a href="#" id="promotions_nav_link_mobile" class="block text-gray-700 hover:text-red-500 transition duration-300">Khuyến mại</a></li>
+            <li><a href="#why_choose_us" class="block text-gray-700 hover:text-red-500 transition duration-300">Dịch vụ</a></li>
+            <li><a href="#" id="contact_nav_link_mobile" class="block text-gray-700 hover:text-red-500 transition duration-300">Liên hệ</a></li>
+            <li id="profile_nav_item_mobile" class="hidden"><a href="#" id="profile_nav_link_mobile" class="block text-gray-700 hover:text-red-500 transition duration-300">Hồ sơ</a></li>
+            <li id="admin_settings_nav_item_mobile" class="hidden"><a href="#" id="admin_settings_nav_link_mobile" class="block text-gray-700 hover:text-red-500 transition duration-300">Cài đặt Quản trị</a></li>
+            <li class="mt-4">
+                <button id="login_status_btn_mobile" class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-full shadow-lg transition duration-300 transform hover:scale-105 active:scale-95">
+                    Đăng nhập
+                </button>
+            </li>
+        </ul>
+    </div>
+
     <!-- Flight Search Section (Hero) -->
     <section id="flight_search_form" class="relative text-red-500 py-24 md:py-48 overflow-hidden">
-        <div id="hero_background" style="background-image: url('https://placehold.co/1920x1080/000000/FFFFFF?text=Flight+Background');"></div>
-        <div class="container mx-auto px-6 md:px-10 relative z-10 text-center">
+        <div id="hero_background" ></div>
+        <div class="container ml-auto px-6 md:px-10 relative z-10 text-center">
             <h1 id="hero_headline" class="text-4xl md:text-6xl font-extrabold leading-tight mb-6 drop-shadow-lg">
                 Khám phá thế giới cùng Vietjet Air
             </h1>
@@ -315,7 +368,7 @@
 
     <!-- Popular Destinations Section -->
     <section id="popular_destinations_section" class="py-16 relative">
-        <div id="popular_destinations_background" style="background-image: url('https://placehold.co/1920x1080/E0F2F7/000000?text=Popular+Destinations');"></div>
+        <div id="popular_destinations_background"></div>
         <div class="container mx-auto px-6 md:px-10 relative z-10">
             <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">Điểm đến nổi bật & Ưu đãi hấp dẫn</h2>
             <div id="popular_destinations_list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -516,9 +569,9 @@
             <h3 class="text-2xl font-bold text-gray-800 mb-6">Tải ảnh xác nhận thanh toán</h3>
 
             <div class="mb-6">
-                <label for="payment_proof_input" class="block text-gray-700 text-sm font-semibold mb-2 text-left">Chọn ảnh xác nhận</label>
-                <input type="file" id="payment_proof_input" accept="image/*" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
-                <p class="text-sm text-gray-500 mt-2 text-left">Chỉ chấp nhận định dạng ảnh (JPG, PNG).</p>
+                <label for="payment_proof_input" class="block text-gray-700 text-sm font-semibold mb-2 text-left">URL Ảnh xác nhận</label>
+                <input type="text" id="payment_proof_input" placeholder="Nhập URL ảnh xác nhận" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-gray-900">
+                <p class="text-sm text-gray-500 mt-2 text-left">Nhập URL ảnh (ví dụ: https://example.com/payment.jpg).</p>
             </div>
 
             <p class="text-red-600 font-semibold mb-6">Lưu ý: Thời gian xử lý giao dịch khoảng 15-20 phút.</p>
@@ -932,7 +985,7 @@
         const closePaymentModalBtn = document.getElementById('close_payment_modal_btn');
 
         const uploadProofModal = document.getElementById('upload_proof_modal');
-        const paymentProofInput = document.getElementById('payment_proof_input');
+        const paymentProofInput = document.getElementById('payment_proof_input'); // Changed to text input
         const uploadProofConfirmBtn = document.getElementById('upload_proof_confirm_btn');
         const closeUploadProofModalBtn = document.getElementById('close_upload_proof_modal_btn');
 
@@ -976,7 +1029,7 @@
         const chatAttachBtn = document.getElementById('chat_attach_btn');
         const chatFileInput = document.getElementById('chat_file_input');
         const chatSendBtn = document.getElementById('chat_send_btn');
-        const closeChatModalBtn = document.getElementById('close_chat_modal_btn'); 
+        const closeChatModalBtn = document.getElementById('close_chat_modal_btn');
 
         const loginRegisterModal = document.getElementById('login_register_modal');
         const authModalTitle = document.getElementById('auth_modal_title');
@@ -1060,6 +1113,12 @@
         const floatingIconUrlInput = document.getElementById('floating_icon_url');
         const saveAdvertisementSettingsBtn = document.getElementById('save_advertisement_settings_btn');
 
+        // Zoom controls
+        const zoomInBtn = document.getElementById('zoom_in_btn');
+        const zoomOutBtn = document.getElementById('zoom_out_btn');
+        const zoomLevelDisplay = document.getElementById('zoom_level_display');
+        let currentZoomLevel = 1.0; // 1.0 = 100%
+
         let currentSelectedFlight = null;
         let tempSelectedOutboundFlight = null;
         let tempSelectedReturnFlight = null;
@@ -1069,6 +1128,21 @@
         let adultPassengers = 1;
         let childPassengers = 0;
         let infantPassengers = 0;
+
+        // Mobile Menu Elements
+        const hamburgerMenuBtn = document.getElementById('hamburger_menu_btn');
+        const mobileMenu = document.getElementById('mobile_menu');
+        const closeMobileMenuBtn = document.getElementById('close_mobile_menu_btn');
+        const mobileMenuOverlay = document.getElementById('mobile_menu_overlay');
+        const historyNavLinkMobile = document.getElementById('history_nav_link_mobile');
+        const promotionsNavLinkMobile = document.getElementById('promotions_nav_link_mobile');
+        const contactNavLinkMobile = document.getElementById('contact_nav_link_mobile');
+        const profileNavItemMobile = document.getElementById('profile_nav_item_mobile');
+        const profileNavLinkMobile = document.getElementById('profile_nav_link_mobile');
+        const adminSettingsNavItemMobile = document.getElementById('admin_settings_nav_item_mobile');
+        const adminSettingsNavLinkMobile = document.getElementById('admin_settings_nav_link_mobile');
+        const loginStatusBtnMobile = document.getElementById('login_status_btn_mobile');
+
 
         const formatDate = (date) => {
             const yyyy = date.getFullYear();
@@ -1158,6 +1232,16 @@
 
         onAuthStateChanged(auth, async (user) => {
             updateHeaderNav();
+            // Listen for booking history changes only if logged in and not admin
+            if (loggedInUser && !loggedInUser.isAdmin) {
+                onSnapshot(collection(db, `artifacts/${appId}/users/${loggedInUser.username}/bookings`), (snapshot) => {
+                    loggedInUser.history = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    if (historyModal.classList.contains('modal-enter')) renderBookingHistory();
+                }, (error) => console.error("Error fetching user history:", error));
+            } else if (loggedInUser && loggedInUser.isAdmin) {
+                // Admin can view all history, which is already listened to globally
+                if (historyModal.classList.contains('modal-enter')) renderBookingHistory();
+            }
             if (historyModal.classList.contains('modal-enter')) renderBookingHistory();
             if (adminSettingsModal.classList.contains('modal-enter')) showAdminTab(document.querySelector('.admin-tab-btn.border-blue-500')?.dataset.tab || 'promotions');
             if (loggedInUser && !loggedInUser.isAdmin) {
@@ -1236,6 +1320,10 @@
             if (adminSettingsModal.classList.contains('modal-enter') && document.querySelector('.admin-tab-btn.border-blue-500')?.dataset.tab === 'all_history') {
                 renderAdminAllHistory();
             }
+            // If admin, update global history. If user, their specific history is handled by onAuthStateChanged.
+            if (loggedInUser && loggedInUser.isAdmin) {
+                if (historyModal.classList.contains('modal-enter')) renderBookingHistory();
+            }
         }, (error) => console.error("Error fetching all booking history:", error));
 
         onSnapshot(doc(db, `artifacts/${appId}/public/data/appSettings`, 'advertisement'), (docSnap) => {
@@ -1280,14 +1368,28 @@
             if (loggedInUser) {
                 loginStatusBtn.innerText = loggedInUser.username;
                 loginStatusBtn.onclick = logoutUser;
+                loginStatusBtnMobile.innerText = loggedInUser.username; // Mobile
+                loginStatusBtnMobile.onclick = logoutUser; // Mobile
+
                 adminSettingsNavItem.classList.toggle('hidden', !loggedInUser.isAdmin);
+                adminSettingsNavItemMobile.classList.toggle('hidden', !loggedInUser.isAdmin); // Mobile
+
                 profileNavItem.classList.remove('hidden');
+                profileNavItemMobile.classList.remove('hidden'); // Mobile
+
                 chatSenderName.innerText = loggedInUser.username;
             } else {
                 loginStatusBtn.innerText = 'Đăng nhập';
                 loginStatusBtn.onclick = () => showModal(loginRegisterModal);
+                loginStatusBtnMobile.innerText = 'Đăng nhập'; // Mobile
+                loginStatusBtnMobile.onclick = () => showModal(loginRegisterModal); // Mobile
+
                 adminSettingsNavItem.classList.add('hidden');
+                adminSettingsNavItemMobile.classList.add('hidden'); // Mobile
+
                 profileNavItem.classList.add('hidden');
+                profileNavItemMobile.classList.add('hidden'); // Mobile
+
                 chatSenderName.innerText = 'Khách hàng';
             }
         }
@@ -1371,12 +1473,7 @@
                         showCustomAlert(`Chào mừng, ${loggedInUser.fullname}!`);
                         loginErrorMessage.classList.add('hidden');
 
-                        if (!loggedInUser.isAdmin) {
-                            onSnapshot(collection(db, `artifacts/${appId}/users/${currentUserId}/bookings`), (snapshot) => {
-                                loggedInUser.history = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                                if (historyModal.classList.contains('modal-enter')) renderBookingHistory();
-                            }, (error) => console.error("Error fetching user history:", error));
-                        }
+                        // The onAuthStateChanged listener will now handle fetching user-specific history.
                     } else {
                         loginErrorMessage.innerText = 'Sai mật khẩu.';
                         loginErrorMessage.classList.remove('hidden');
@@ -1419,7 +1516,20 @@
             return airport ? airport.basePrice : 0;
         }
 
+        // Event listeners for login/register
         loginStatusBtn.addEventListener('click', () => {
+            if (!loggedInUser) {
+                showModal(loginRegisterModal);
+                authModalTitle.innerText = 'Đăng nhập';
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                loginErrorMessage.classList.add('hidden');
+            } else {
+                logoutUser();
+            }
+        });
+        loginStatusBtnMobile.addEventListener('click', () => { // Mobile
+            hideMobileMenu();
             if (!loggedInUser) {
                 showModal(loginRegisterModal);
                 authModalTitle.innerText = 'Đăng nhập';
@@ -1451,8 +1561,24 @@
         registerSubmitBtn.addEventListener('click', registerUser);
         closeLoginRegisterModalBtn.addEventListener('click', () => hideModal(loginRegisterModal));
 
+        // Event listeners for profile
         profileNavLink.addEventListener('click', (e) => {
             e.preventDefault();
+            if (loggedInUser) {
+                profileUsernameInput.value = loggedInUser.username;
+                profileFullnameInput.value = loggedInUser.fullname;
+                profilePhoneInput.value = loggedInUser.phone;
+                profileEmailInput.value = loggedInUser.email || '';
+                profileProvinceInput.value = loggedInUser.province;
+                profileErrorMessage.classList.add('hidden');
+                showModal(profileModal);
+            } else {
+                showCustomAlert("Vui lòng đăng nhập để xem hồ sơ.");
+            }
+        });
+        profileNavLinkMobile.addEventListener('click', (e) => { // Mobile
+            e.preventDefault();
+            hideMobileMenu();
             if (loggedInUser) {
                 profileUsernameInput.value = loggedInUser.username;
                 profileFullnameInput.value = loggedInUser.fullname;
@@ -1979,9 +2105,9 @@
         });
 
         uploadProofConfirmBtn.addEventListener('click', async function() {
-            const file = paymentProofInput.files[0];
-            if (file) {
-                showCustomAlert(`Đã tải lên ảnh "${file.name}".\nThời gian xử lý giao dịch khoảng 15-20 phút.`);
+            const paymentProofUrl = paymentProofInput.value.trim(); // Get URL from input
+            if (paymentProofUrl) {
+                showCustomAlert(`Đã lưu URL ảnh xác nhận.\nThời gian xử lý giao dịch khoảng 15-20 phút.`);
                 hideModal(uploadProofModal);
 
                 let bookingId = 'BK' + Math.floor(Math.random() * 100000).toString().padStart(5, '0');
@@ -2005,14 +2131,15 @@
                     bookingDate: formatDate(new Date()),
                     username: loggedInUser ? loggedInUser.username : 'Guest',
                     creatorId: auth.currentUser ? auth.currentUser.uid : 'anonymous',
-                    seats: selectedSeatsDisplay
+                    seats: selectedSeatsDisplay,
+                    paymentProofUrl: paymentProofUrl // Store the URL
                 };
 
                 try {
                     // Save to allBookingHistory collection (public)
                     await addDoc(collection(db, `artifacts/${appId}/public/data/allBookingHistory`), newBooking);
 
-                    // Save to user's private booking history if logged in
+                    // Save to user's private booking history if logged in and not admin
                     if (loggedInUser && !loggedInUser.isAdmin) {
                         await addDoc(collection(db, `artifacts/${appId}/users/${currentUserId}/bookings`), newBooking);
                     }
@@ -2022,7 +2149,7 @@
 
                 paymentProofInput.value = '';
             } else {
-                showCustomAlert('Vui lòng chọn một ảnh để tải lên để giảm thời gian xử lý.');
+                showCustomAlert('Vui lòng nhập URL ảnh xác nhận để giảm thời gian xử lý.');
             }
         });
 
@@ -2178,6 +2305,16 @@
             renderBookingHistory();
             showModal(historyModal);
         });
+        historyNavLinkMobile.addEventListener('click', function(e) { // Mobile
+            e.preventDefault();
+            hideMobileMenu();
+            if (!loggedInUser) {
+                showCustomAlert("Vui lòng đăng nhập để xem lịch sử đặt vé.");
+                return;
+            }
+            renderBookingHistory();
+            showModal(historyModal);
+        });
 
         closeHistoryModalBtn.addEventListener('click', function() {
             hideModal(historyModal);
@@ -2185,7 +2322,7 @@
 
         function renderBookingHistory() {
             bookingHistoryList.innerHTML = '';
-            const historyToDisplay = loggedInUser && !loggedInUser.isAdmin && loggedInUser.history ? loggedInUser.history : [];
+            const historyToDisplay = loggedInUser && loggedInUser.isAdmin ? allBookingHistoryCache : (loggedInUser && loggedInUser.history ? loggedInUser.history : []);
 
             if (historyToDisplay.length === 0) {
                 noHistoryMessage.classList.remove('hidden');
@@ -2205,6 +2342,7 @@
                     bookingCard.innerHTML = `
                         <div class="flex-grow mb-2 md:mb-0">
                             <p class="text-lg font-bold text-gray-900">Mã đặt chỗ: ${booking.id}</p>
+                            ${loggedInUser && loggedInUser.isAdmin ? `<p class="text-sm text-gray-700">Người đặt: ${booking.username} (ID: ${booking.creatorId})</p>` : ''}
                             <p class="text-sm text-gray-700">${booking.flightInfo}</p>
                             <p class="text-sm text-gray-700">Ngày đặt: ${booking.bookingDate}</p>
                             <p class="text-sm text-gray-700">Ghế đã chọn: ${booking.seats || 'N/A'}</p>
@@ -2221,6 +2359,12 @@
 
         promotionsNavLink.addEventListener('click', function(e) {
             e.preventDefault();
+            renderPromotions();
+            showModal(promotionsModal);
+        });
+        promotionsNavLinkMobile.addEventListener('click', function(e) { // Mobile
+            e.preventDefault();
+            hideMobileMenu();
             renderPromotions();
             showModal(promotionsModal);
         });
@@ -2290,6 +2434,11 @@
 
         contactNavLink.addEventListener('click', function(e) {
             e.preventDefault();
+            showModal(contactModal);
+        });
+        contactNavLinkMobile.addEventListener('click', function(e) { // Mobile
+            e.preventDefault();
+            hideMobileMenu();
             showModal(contactModal);
         });
 
@@ -2460,6 +2609,16 @@
             showModal(adminSettingsModal);
             showAdminTab('promotions');
         });
+        adminSettingsNavLinkMobile.addEventListener('click', function(e) { // Mobile
+            e.preventDefault();
+            hideMobileMenu();
+            if (!loggedInUser || !loggedInUser.isAdmin) {
+                showCustomAlert("Bạn không có quyền truy cập trang này.");
+                return;
+            }
+            showModal(adminSettingsModal);
+            showAdminTab('promotions');
+        });
 
         closeAdminSettingsModalBtn.addEventListener('click', function() {
             hideModal(adminSettingsModal);
@@ -2550,7 +2709,8 @@
                     image: newImage
                 });
                 showCustomAlert("Đã thêm khuyến mại mới.");
-            } catch (error) {
+            }
+            catch (error) {
                 showCustomAlert("Lỗi khi thêm khuyến mại: " + error.message);
             }
         }
@@ -2875,6 +3035,10 @@
                             <p class="text-gray-700 text-sm">Ngày đặt: ${booking.bookingDate}</p>
                             <p class="text-gray-700 text-sm">Giá: ${booking.price}</p>
                             <p class="text-gray-700 text-sm">Ghế đã chọn: ${booking.seats || 'N/A'}</p>
+                            ${booking.paymentProofUrl ? `<div class="mt-2">
+                                <p class="text-gray-700 text-sm">Ảnh xác nhận thanh toán:</p>
+                                <img src="${booking.paymentProofUrl}" alt="Payment Proof" class="w-32 h-auto rounded-md border border-gray-300 mt-1">
+                            </div>` : ''}
                         </div>
                         <div class="text-center md:text-right">
                             <p class="text-base font-semibold ${statusColor} mb-2">Trạng thái: ${booking.status}</p>
@@ -2944,17 +3108,17 @@
         }
 
         function applyAdvertisementSettings() {
+            // Apply body background image from settings
             if (appSettingsCache.heroBackgroundUrl) {
-                heroBackground.style.backgroundImage = `url('${appSettingsCache.heroBackgroundUrl}')`;
+                document.body.style.backgroundImage = `url('${appSettingsCache.heroBackgroundUrl}')`;
             } else {
-                heroBackground.style.backgroundImage = `url('https://placehold.co/1920x1080/000000/FFFFFF?text=Flight+Background')`;
+                // Fallback to a default if no URL is provided
+                document.body.style.backgroundImage = `url('https://placehold.co/1920x1080/ADD8E6/000000?text=Global+Background')`;
             }
 
-            if (appSettingsCache.popularDestinationsBackgroundUrl) {
-                popularDestinationsBackground.style.backgroundImage = `url('${appSettingsCache.popularDestinationsBackgroundUrl}')`;
-            } else {
-                popularDestinationsBackground.style.backgroundImage = `url('https://placehold.co/1920x1080/E0F2F7/000000?text=Popular+Destinations')`;
-            }
+            // Ensure hero and popular destinations backgrounds are transparent or not set
+            heroBackground.style.backgroundImage = 'none';
+            popularDestinationsBackground.style.backgroundImage = 'none';
 
             if (appSettingsCache.floatingIconUrl) {
                 floatingAdIcon.src = appSettingsCache.floatingIconUrl;
@@ -3114,8 +3278,26 @@
 
         savePaymentSettingsBtn.addEventListener('click', savePaymentSettings);
 
+        // Zoom functionality
+        function updateZoomLevel() {
+            document.body.style.zoom = currentZoomLevel;
+            zoomLevelDisplay.innerText = `${Math.round(currentZoomLevel * 100)}%`;
+        }
+
+        zoomInBtn.addEventListener('click', () => {
+            currentZoomLevel = Math.min(currentZoomLevel + 0.1, 2.0); // Max zoom 200%
+            updateZoomLevel();
+        });
+
+        zoomOutBtn.addEventListener('click', () => {
+            currentZoomLevel = Math.max(currentZoomLevel - 0.1, 0.5); // Min zoom 50%
+            updateZoomLevel();
+        });
+
         // Initial authentication and data load
         authenticateUser();
+        applyAdvertisementSettings(); // Apply initial advertisement settings
+        updateZoomLevel(); // Set initial zoom level
     </script>
 </body>
 </html>

@@ -935,7 +935,7 @@
         <img id="floating_ad_icon" src="" alt="Floating Ad Icon">
         <span id="unread_count_badge" class="unread-badge hidden">0</span>
     </div>
-    <script type="module">
+	<script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -2260,7 +2260,7 @@
                 id: bookingId,
                 flightInfo: flightInfo,
                 price: price,
-                status: 'Đặt vé thành công', // Directly set status to 'Đặt vé thành công'
+                status: 'Chờ xác nhận', // Set status to 'Chờ xác nhận'
                 bookingDate: formatDate(new Date()),
                 username: loggedInUser ? loggedInUser.username : 'Guest',
                 creatorId: auth.currentUser ? auth.currentUser.uid : 'anonymous', // Use Firebase UID for creatorId
@@ -2274,9 +2274,9 @@
 
                 // Save to user's private booking history if logged in and not admin
                 if (loggedInUser && !loggedInUser.isAdmin) {
-                    await setDoc(doc(db, `artifacts/${appId}/users/${currentUserId}/bookings`, bookingId), newBooking);
+                    await setDoc(doc(db, `artifacts/${appId}/users/${loggedInUser.username}/bookings`, bookingId), newBooking);
                 }
-                showCustomAlert(`Đặt vé thành công! Mã đặt chỗ của bạn là: ${bookingId}`);
+                showCustomAlert(`Đặt vé thành công!\nMã đặt chỗ của bạn: ${bookingId}\nThông tin vé: ${flightInfo}\nGiá: ${price}\nGhế: ${selectedSeatsDisplay}\nTrạng thái: Chờ xác nhận`);
                 // Trigger a re-render of booking history if the modal is open
                 if (historyModal.classList.contains('modal-enter')) {
                     renderBookingHistory();
@@ -2469,6 +2469,8 @@
                         statusColor = 'text-blue-600';
                     } else if (booking.status === 'Đã hủy') { // Added 'Đã hủy' status
                         statusColor = 'text-red-600';
+                    } else if (booking.status === 'Chờ xác nhận') { // New status: Chờ xác nhận
+                        statusColor = 'text-orange-600';
                     }
                     bookingCard.innerHTML = `
                         <div class="flex-grow mb-2 md:mb-0">
@@ -3342,6 +3344,8 @@
                         statusColor = 'text-blue-600';
                     } else if (booking.status === 'Đã hủy') {
                         statusColor = 'text-red-600';
+                    } else if (booking.status === 'Chờ xác nhận') { // New status: Chờ xác nhận
+                        statusColor = 'text-orange-600';
                     }
                     bookingCard.innerHTML = `
                         <div class="flex-grow mb-2 md:mb-0">
@@ -3358,12 +3362,14 @@
                         </div>
                         <div class="text-center md:text-right">
                             <p class="text-base font-semibold ${statusColor} mb-2">Trạng thái: ${booking.status}</p>
-                            <select class="admin-status-select bg-white border border-gray-300 rounded-md p-2 text-sm" data-id="${booking.id}" data-user-id="${booking.creatorId}">
+                            <select class="admin-status-select bg-white border border-gray-300 rounded-md p-2 text-sm" data-id="${booking.id}" data-user-id="${booking.username}">
+                                <option value="Chờ xác nhận" ${booking.status === 'Chờ xác nhận' ? 'selected' : ''}>Chờ xác nhận</option>
                                 <option value="Đang xử lý" ${booking.status === 'Đang xử lý' ? 'selected' : ''}>Đang xử lý</option>
                                 <option value="Đặt vé thành công" ${booking.status === 'Đặt vé thành công' ? 'selected' : ''}>Đặt vé thành công</option>
                                 <option value="Đã hoàn thành" ${booking.status === 'Đã hoàn thành' ? 'selected' : ''}>Đã hoàn thành</option>
                                 <option value="Đã hủy" ${booking.status === 'Đã hủy' ? 'selected' : ''}>Đã hủy</option>
                             </select>
+                            <button class="delete-booking-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm mt-2" data-id="${booking.id}" data-user-id="${booking.username}">Xóa</button>
                         </div>
                     `;
                     adminAllHistoryList.appendChild(bookingCard);
@@ -3372,13 +3378,16 @@
                 document.querySelectorAll('.admin-status-select').forEach(select => {
                     select.addEventListener('change', updateBookingStatus);
                 });
+                document.querySelectorAll('.delete-booking-btn').forEach(btn => {
+                    btn.addEventListener('click', deleteBooking);
+                });
             }
         }
 
         // Sửa lỗi khi admin thay đổi trạng thái đặt vé của tài khoản khác bị lỗi
         async function updateBookingStatus(event) {
             const bookingId = event.target.dataset.id;
-            const creatorId = event.target.dataset.userId; // This is the Firebase UID, not username
+            const username = event.target.dataset.userId; // This is the username
             const newStatus = event.target.value;
 
             try {
@@ -3387,25 +3396,51 @@
                     status: newStatus
                 });
 
-                // Update in user's private booking history (if it exists and matches the creatorId)
+                // Update in user's private booking history (if it exists and matches the username)
                 // We need to find the specific booking document within the user's collection by its ID
-                const userBookingsQuery = query(collection(db, `artifacts/${appId}/users/${creatorId}/bookings`), where("id", "==", bookingId));
+                const userBookingsQuery = query(collection(db, `artifacts/${appId}/users/${username}/bookings`), where("id", "==", bookingId));
                 const userBookingsSnapshot = await getDocs(userBookingsQuery);
 
                 if (!userBookingsSnapshot.empty) {
                     userBookingsSnapshot.forEach(async (docSnapshot) => {
-                        await updateDoc(doc(db, `artifacts/${appId}/users/${creatorId}/bookings`, docSnapshot.id), {
+                        await updateDoc(doc(db, `artifacts/${appId}/users/${username}/bookings`, docSnapshot.id), {
                             status: newStatus
                         });
                     });
                 } else {
-                    console.warn(`Booking with ID ${bookingId} not found in user ${creatorId}'s private history.`);
+                    console.warn(`Booking with ID ${bookingId} not found in user ${username}'s private history.`);
                 }
 
                 showCustomAlert(`Đã cập nhật trạng thái đặt vé ${bookingId} thành "${newStatus}".`);
             } catch (error) {
                 showCustomAlert("Lỗi khi cập nhật trạng thái đặt vé: " + error.message);
                 console.error("Error updating booking status:", error);
+            }
+        }
+
+        async function deleteBooking(event) {
+            const bookingId = event.target.dataset.id;
+            const username = event.target.dataset.userId;
+
+            if (confirm(`Bạn có chắc chắn muốn xóa vé đặt chỗ "${bookingId}" của người dùng "${username}"?`)) {
+                try {
+                    // Delete from allBookingHistory collection (public data)
+                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/allBookingHistory`, bookingId));
+
+                    // Delete from user's private booking history
+                    const userBookingDocRef = doc(db, `artifacts/${appId}/users/${username}/bookings`, bookingId);
+                    const userBookingSnap = await getDoc(userBookingDocRef);
+                    if (userBookingSnap.exists()) {
+                        await deleteDoc(userBookingDocRef);
+                    } else {
+                        console.warn(`Booking with ID ${bookingId} not found in user ${username}'s private history for deletion.`);
+                    }
+
+                    showCustomAlert(`Đã xóa vé đặt chỗ ${bookingId} khỏi tất cả lịch sử.`);
+                } catch (error) {
+                    showCustomAlert("Lỗi khi xóa vé đặt chỗ: " + error.message);
+                    console.error("Error deleting booking:", error);
+                }
             }
         }
 
